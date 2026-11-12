@@ -74,9 +74,11 @@ for (const [name, viewport] of [
 
       if (id === 'solitaire') {
         // A face-up partial run, not just the top card, must visibly follow the pointer.
-        await frame.evaluate(async () => {
-          const {validGame} = await import('./engine.js');
-          const used = [12, 24, 36, 22, 38]; // K♠ Q♥ J♣ 10♥ | K♣
+        // Run the fixture before the iframe's app.js, because the existing
+        // pagehide handler otherwise overwrites seeded localStorage on reload.
+        await context.addInitScript(() => {
+          if (!location.pathname.endsWith('/solitaire/')) return;
+          const used = [12,24,36,22,38]; // K♠ Q♥ J♣ 10♥ | K♣
           const game = {
             stock:Array.from({length:52},(_,i)=>i).filter(card=>!used.includes(card)),
             waste:[],foundations:Array.from({length:4},()=>[]),
@@ -85,10 +87,9 @@ for (const [name, viewport] of [
           };
           game.tableau[0]=[12,24,36,22].map(card=>({id:card,up:true}));
           game.tableau[1]=[{id:38,up:true}];
-          if(!validGame(game)) throw new Error('Invalid Klondike drag fixture');
           localStorage.setItem('mygames-solitaire-state-v1',JSON.stringify({game,past:[]}));
         });
-        await frame.goto(origin+'/solitaire/',{waitUntil:'domcontentloaded'});
+        await frame.goto(origin+'/solitaire/?qa=drag',{waitUntil:'domcontentloaded'});
         await frame.waitForSelector('.tableau-col[data-column="0"] .card[data-index="1"]');
         const fromBox = await frame.locator('.tableau-col[data-column="0"] .card[data-index="1"]').boundingBox();
         const toBox = await frame.locator('.tableau-col[data-column="1"] .card[data-index="0"]').boundingBox();
