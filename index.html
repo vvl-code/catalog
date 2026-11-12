@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0a1121">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Mini Games — бесплатный каталог игр. Играй прямо в Telegram.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://telegram.org; style-src 'self'; img-src 'self' data:; frame-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'">
+  <title>Mini Games — каталог игр</title>
+  <link rel="icon" type="image/svg+xml" href="./icons/icon.svg">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Mini Games">
+  <link rel="stylesheet" href="./styles.css?v=3.0.0">
+  <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
+  <script src="./app.js?v=3.0.0" defer></script>
+</head>
+<body>
+  <div id="catalog-view" class="shell">
+    <header class="topbar">
+      <div class="brand-mark" aria-hidden="true">▦</div>
+      <div class="brand">
+        <span class="brand-name">MINI <span>GAMES</span><span class="brand-dot">.</span></span>
+        <span class="brand-subtitle">ТВОЯ ИГРОВАЯ КОЛЛЕКЦИЯ</span>
+      </div>
+      <span class="brand-counter" aria-label="В каталоге двенадцать игр">12</span>
+    </header>
+
+    <main class="content">
+      <div class="intro">
+        <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> ДОСТУПНО СЕЙЧАС</p>
+        <h1>Пора <span>играть.</span></h1>
+        <p>Классические игры в твоём Telegram. Без рекламы, подписок и лишних установок.</p>
+      </div>
+
+      <section class="section-games" aria-labelledby="available-heading">
+        <div class="section-heading">
+          <h2 id="available-heading">Мои игры</h2>
+          <span>12 игр</span>
+        </div>
+        <button type="button" class="game-card compact-card" id="play-blocks" data-game="blocks" aria-label="Запустить игру Блоки">
+          <div class="compact-art blocks-icon-art" aria-hidden="true"><img class="blocks-card-icon" src="./icons/blocks.svg" width="126" height="126" alt="" loading="lazy"></div>
+          <div class="compact-info">
+            <span class="compact-tag">АРКАДА · КЛАССИКА</span>
+            <span class="compact-title">БЛОКИ<span class="title-dot">.</span></span>
+            <span class="compact-description">Собирай линии, ускоряйся и побей свой рекорд.</span>
+            <span class="compact-record" id="record">РЕКОРД —</span>
+            <span class="compact-play">ИГРАТЬ <span aria-hidden="true">↗</span></span>
+          </div>
+        </button>
+        <button type="button" class="game-card compact-card" data-game="match3" aria-label="Запустить игру Три в ряд">
+          <div class="compact-art gems-art" aria-hidden="true"><span>◆</span><span>◆</span><span>◆</span><span>◆</span><span>◆</span><span>◆</span><span>◆</span><span>◆</span><span>◆</span></div>
+          <div class="compact-info">
+            <span class="compact-tag">ГОЛОВОЛОМКА</span>
+            <span class="compact-title">ТРИ В РЯД<span class="title-dot">.</span></span>
+            <span class="compact-description">Собирай кристаллы, создавай комбо и побей свой рекорд.</span>
+            <span class="compact-record" id="match3-record">РЕКОРД —</span>
+            <span class="compact-play">ИГРАТЬ <span aria-hidden="true">↗</span></span>
+          </div>
+        </button>
+        <button type="button" class="game-card compact-card" data-game="solitaire" aria-label="Запустить игру Косынка">
+          <div class="compact-art cards-art" aria-hidden="true"><span>♠</span><span>♥</span><span>♣</span><span>♦</span></div>
+          <div class="compact-info">
+            <span class="compact-tag">ПАСЬЯНС</span>
+            <span class="compact-title">КОСЫНКА<span class="title-dot">.</span></span>
+            <span class="compact-description">Классическая колода 52 карты. Собери все четыре масти.</span>
+            <span class="compact-record" id="solitaire-record">ПОБЕДЫ —</span>
+            <span class="compact-play">ИГРАТЬ <span aria-hidden="true">↗</span></span>
+          </div>
+        </button>
+      </section>
+
+      <section class="future" aria-labelledby="future-heading">
+        <div class="future-symbol" aria-hidden="true">✧</div>
+        <div><h2 id="future-heading">Продолжение следует</h2><p>Здесь появятся наши следующие игры.</p></div>
+      </section>
+    </main>
+    <footer class="footer"><span>MINI GAMES</span><span>СДЕЛАНО ДЛЯ ИГРЫ, А НЕ ДЛЯ РЕКЛАМЫ</span></footer>
+  </div>
+
+  <section id="player-view" class="player-view" aria-label="Экран игры" hidden>
+    <header class="player-bar">
+      <button type="button" class="back-button" id="back-to-games" aria-label="Вернуться к списку игр"><span aria-hidden="true">‹</span> ИГРЫ</button>
+      <strong id="player-title">БЛОКИ<span class="title-dot">.</span></strong>
+      <span class="player-spacer" aria-hidden="true"></span>
+    </header>
+    <iframe id="game-frame" title="Блоки — классическая игра" allow="autoplay" referrerpolicy="same-origin"></iframe>
+  </section>
+</body>
+</html>

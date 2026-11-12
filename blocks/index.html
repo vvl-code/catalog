@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#10192b">
+  <meta name="description" content="Классическая игра с падающими блоками. Без рекламы и интернета.">
+  <meta name="color-scheme" content="dark">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'">
+  <link rel="icon" type="image/svg+xml" href="../icons/blocks.svg">
+  
+  <link rel="stylesheet" href="./styles.css">
+  <title>Блоки — классика</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="top-bar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">▦</span><span>БЛОКИ<span class="brand-dot">.</span></span></div>
+      <div class="top-right"><span id="offline-badge" class="offline-badge" hidden>ОФЛАЙН</span><button class="icon-button" id="sound-button" aria-label="Выключить звук" title="Звук">♫</button></div>
+    </header>
+
+    <main>
+      <section class="score-strip" aria-label="Статистика игры">
+        <div><span class="metric-label">ОЧКИ</span><strong class="metric-value" id="score">0</strong></div>
+        <div><span class="metric-label">ЛИНИИ</span><strong class="metric-value" id="lines">0</strong></div>
+        <div><span class="metric-label">УРОВЕНЬ</span><strong class="metric-value" id="level">1</strong></div>
+        <div><span class="metric-label">РЕКОРД</span><strong class="metric-value" id="best">0</strong></div>
+      </section>
+
+      <div class="game-area">
+        <section class="board-container" aria-label="Игровое поле">
+          <div class="board-frame" id="board-frame">
+            <canvas id="board" width="300" height="600" role="img" aria-label="Игровое поле, 10 столбцов, 20 строк"></canvas>
+            <div class="game-overlay" id="overlay">
+              <div class="overlay-symbol" aria-hidden="true">▦</div>
+              <h1 id="overlay-title">Готов играть?</h1>
+              <p id="overlay-description">Собирай линии и побей свой рекорд.</p>
+              <button class="primary-button" id="overlay-button" type="button">НАЧАТЬ ИГРУ</button>
+            </div>
+          </div>
+          <div class="board-accent" aria-hidden="true"></div>
+        </section>
+
+        <aside class="game-sidebar" aria-label="Следующая фигура и управление">
+          <div class="next-panel">
+            <div class="panel-caption">ДАЛЬШЕ</div>
+            <canvas id="next" width="100" height="100" aria-label="Следующая фигура" role="img"></canvas>
+          </div>
+          <button class="side-button" id="pause-button" type="button" title="Пауза" aria-label="Пауза"><span class="side-icon">Ⅱ</span><span>ПАУЗА</span></button>
+          <button class="side-button new-game-button" id="new-button" type="button" title="Новая игра"><span class="side-icon">↻</span><span>ЗАНОВО</span></button>
+          <div class="sidebar-decor" aria-hidden="true"><span>10</span><span>×</span><span>20</span></div>
+        </aside>
+      </div>
+
+      <section class="control-bar" aria-label="Сенсорное управление">
+        <button class="control-key" data-action="left" type="button" aria-label="Влево"><span>◀</span><small>ВЛЕВО</small></button>
+        <button class="control-key" data-action="right" type="button" aria-label="Вправо"><span>▶</span><small>ВПРАВО</small></button>
+        <button class="control-key rotate-key" data-action="rotate" type="button" aria-label="Повернуть"><span>⟳</span><small>ПОВОРОТ</small></button>
+        <button class="control-key" data-action="down" type="button" aria-label="Ускорить падение"><span>▼</span><small>ВНИЗ</small></button>
+        <button class="control-key drop-key" data-action="drop" type="button" aria-label="Мгновенно уронить"><span>⤓</span><small>СБРОС</small></button>
+      </section>
+      <p class="gesture-hint">Жесты: влево/вправо — двигать · касание — вращать · вверх — сбросить</p>
+      <p class="sr-only" role="status" id="announcements" aria-live="polite"></p>
+    </main>
+  </div>
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

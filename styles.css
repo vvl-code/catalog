@@ -1,0 +1,90 @@
+:root{--bg:#0a1121;--panel:#122039;--panel-edge:#2c405e;--mint:#62e4ca;--text:#eaf3ff;--muted:#95a7c0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);background:var(--bg);-webkit-tap-highlight-color:transparent;color-scheme:dark}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;overscroll-behavior:none}body{min-height:100dvh;background:radial-gradient(ellipse at 12% 0,#1a3350 0,transparent 53%),radial-gradient(ellipse at 100% 92%,#172d44 0,transparent 50%),var(--bg)}
+[hidden]{display:none!important}button{font:inherit;-webkit-user-select:none;user-select:none;cursor:pointer}button:focus-visible{outline:3px solid var(--mint);outline-offset:4px}
+.shell{display:flex;flex-direction:column;max-width:640px;min-height:100dvh;margin:auto;padding:max(18px,env(safe-area-inset-top)) 18px max(18px,env(safe-area-inset-bottom))}
+.topbar{display:flex;align-items:center;gap:12px;padding:4px 0 19px;border-bottom:1px solid #30415b}
+.brand-mark{display:grid;place-items:center;width:42px;height:42px;border:1px solid #496273;border-radius:12px;background:#18324a;color:var(--mint);font-size:31px;line-height:1}
+.brand{display:flex;flex-direction:column;gap:4px}.brand-name{font-size:22px;line-height:1;font-weight:900;letter-spacing:.065em}.brand-name>span:first-child,.brand-dot{color:var(--mint)}.brand-subtitle{font-size:9px;font-weight:700;letter-spacing:.16em;color:var(--muted)}
+.brand-counter{margin-left:auto;border:1px solid #3a4c65;border-radius:10px;padding:8px 10px;font-size:12px;letter-spacing:.15em;font-weight:900;color:#bfd6e6}
+.content{flex:1}.intro{padding:35px 2px 34px}.eyebrow{display:flex;gap:9px;align-items:center;margin:0 0 17px;color:var(--mint);font-size:10px;font-weight:900;letter-spacing:.15em}.status-dot,.live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 12px #53e9c866}
+.intro h1{font-weight:900;font-size:clamp(38px,9vw,56px);letter-spacing:-.055em;line-height:1;margin:0 0 15px}.intro h1 span{color:var(--mint)}.intro>p:last-child{color:var(--muted);font-size:14px;max-width:360px;line-height:1.6;margin:0}
+.section-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.section-heading h2{font-size:15px;letter-spacing:.015em;margin:0}.section-heading>span{font-size:11px;color:var(--muted)}
+.game-card{display:block;position:relative;text-align:left;width:100%;background:linear-gradient(160deg,#1a2b47,#101c31);color:inherit;padding:12px;border:1px solid var(--panel-edge);border-radius:20px;box-shadow:0 12px 35px #03071352;transition:border-color .18s,transform .18s}.game-card:active{transform:scale(.987)}.game-card:hover{border-color:#66bbae}
+.game-art{position:relative;width:100%;height:clamp(154px,40vw,222px);background:#0b1930;overflow:hidden;border-radius:12px}.game-art svg{width:100%;height:100%;object-fit:contain}.art-label{position:absolute;bottom:11px;left:12px;padding:7px 10px;border-radius:6px;background:#081324c9;border:1px solid #3e5677;color:#bcd0e6;font-size:9px;font-weight:800;letter-spacing:.12em}
+.game-info{padding:15px 6px 3px;display:flex;flex-direction:column;align-items:stretch}.game-title-row{display:flex;align-items:center;justify-content:space-between}.game-title{font-size:24px;font-weight:900;letter-spacing:.08em}.title-dot{color:var(--mint)}.game-description{max-width:440px;font-size:12px;color:var(--muted);line-height:1.65;margin-top:8px}.game-stats{margin-top:14px;color:#a6becf;font-size:10px;font-weight:800;letter-spacing:.08em}.game-stats span[aria-hidden]{margin:0 7px;color:#52708c}
+.play-row{display:flex;justify-content:space-between;align-items:center;min-height:48px;margin-top:16px;padding:0 12px 0 16px;border-radius:10px;background:var(--mint);color:#092238;font-size:12px;font-weight:900;letter-spacing:.12em}.play-arrow{font-size:25px;font-weight:700}
+.future{display:flex;gap:16px;align-items:center;min-height:95px;margin:16px 0 24px;padding:16px;border:1px dashed #3a4c64;border-radius:16px}.future-symbol{width:44px;height:44px;display:grid;place-items:center;color:#7894b0;font-size:28px;border-radius:10px;background:#17253b}.future h2{font-size:13px;margin:0 0 5px;color:#b9c9da}.future p{font-size:11px;margin:0;color:#8699b1}
+.footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:9px;border-top:1px solid #30415b;padding:17px 2px 8px;color:#7186a0;font-weight:800;font-size:9px;letter-spacing:.12em}
+.player-view{display:flex;flex-direction:column;position:fixed;inset:0;width:100%;height:100dvh;background:#0a1121;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.player-bar{height:48px;min-height:48px;display:flex;align-items:center;justify-content:space-between;background:#111d31;border-bottom:1px solid #314765;padding:0 12px}.player-bar strong{font-size:14px;letter-spacing:.13em}.back-button{color:var(--mint);background:transparent;border:0;font-size:12px;font-weight:900;letter-spacing:.1em;display:flex;align-items:center;gap:6px;min-width:90px;min-height:44px}.back-button span{font-size:32px;line-height:.8}.player-spacer{width:90px}
+#game-frame{display:block;flex:1;min-height:0;width:100%;border:0;background:#0a1121}
+@media(min-width:600px){.intro{padding-top:55px}.game-art{height:240px}}@media(prefers-reduced-motion:reduce){.game-card{transition:none}}
+
+/* Compact entries for new games; the installed Blocks PWA is unchanged. */
+.section-games{display:flex;flex-direction:column;gap:12px}.section-heading{margin-bottom:2px}
+.compact-card{display:flex;align-items:stretch;gap:14px;min-height:146px;padding:12px;text-align:left}
+.compact-art{flex:0 0 126px;min-width:0;min-height:120px;border-radius:13px;position:relative;display:grid;place-items:center;overflow:hidden}
+.gems-art{grid-template-columns:repeat(3,32px);grid-template-rows:repeat(3,32px);justify-content:center;align-content:center;gap:4px;background:radial-gradient(circle at 55% 40%,#314b85,#12233f 75%)}
+.gems-art span{display:grid;place-items:center;font-size:25px;text-shadow:0 2px 9px #07273c;filter:drop-shadow(0 0 4px #0008)}
+.gems-art span:nth-child(6n+1){color:#5af0e3}.gems-art span:nth-child(6n+2){color:#fba2a2}.gems-art span:nth-child(6n+3){color:#ad96ff}.gems-art span:nth-child(6n+4){color:#f7d66a}.gems-art span:nth-child(6n+5){color:#68e19e}.gems-art span:nth-child(6n){color:#79c6ff}
+.cards-art{background:radial-gradient(circle at 50% 40%,#276954,#10392f 80%);grid-template-columns:repeat(2,48px);grid-template-rows:repeat(2,52px);justify-content:center;align-content:center;gap:4px}
+.cards-art span{display:grid;place-items:center;background:#f0f4f5;border-radius:5px;border:1px solid #c2d4d1;box-shadow:0 3px 7px #07221f99;font-size:32px;font-weight:900;color:#1c3140;transform:rotate(-5deg)}
+.cards-art span:nth-child(2),.cards-art span:nth-child(4){color:#d34a55;transform:rotate(5deg)}
+.compact-info{min-width:0;flex:1;display:flex;flex-direction:column;align-items:flex-start;gap:7px;padding:2px 0}
+.compact-tag{color:#69e9ce;font-size:9px;letter-spacing:.14em;font-weight:800}.compact-title{font-size:clamp(17px,4.8vw,23px);font-weight:900;letter-spacing:.04em;line-height:1.1}
+.compact-description{color:var(--muted);font-size:11px;line-height:1.45}.compact-record{color:#a6bdd3;font-size:9px;font-weight:800;letter-spacing:.09em;margin-top:auto}
+.compact-play{display:flex;justify-content:space-between;align-items:center;align-self:stretch;padding-top:8px;border-top:1px solid #39516b;color:#66e9cd;font-size:10px;font-weight:900;letter-spacing:.1em}.compact-play span{font-size:20px}
+@media(max-width:355px){.compact-card{gap:10px}.compact-art{flex-basis:100px;min-height:115px}.gems-art{grid-template-columns:repeat(3,27px);grid-template-rows:repeat(3,27px)}.cards-art{grid-template-columns:repeat(2,39px);grid-template-rows:repeat(2,45px)}.compact-description{font-size:10px}}
+
+/* Uniform small game cards, including the original Blocks game. */
+.blocks-art{display:grid;grid-template-columns:repeat(4,21px);grid-template-rows:repeat(5,21px);gap:3px;justify-content:center;align-content:center;background:repeating-linear-gradient(0deg,#102943 0 22px,#163453 22px 23px)}
+.blocks-art span{border-radius:3px;box-shadow:inset 2px 2px #ffffff78,inset -3px -3px #0005,0 0 10px #4de8e64c}
+.blocks-art .falling-cell{background:#4ef2ec;grid-row:1;box-shadow:inset 2px 2px #ffffffae,0 0 12px #49ffe2b9}
+.blocks-art .stack-cell{grid-row:auto;align-self:stretch}
+.blocks-art .blue{background:#5ea9ff}.blocks-art .purple{background:#a27bff}.blocks-art .green{background:#42ef8d}.blocks-art .orange{background:#ffb567}
+.blocks-art .stack-cell:nth-child(5){grid-column:1;grid-row:4}.blocks-art .stack-cell:nth-child(6){grid-column:2;grid-row:4}
+.blocks-art .stack-cell:nth-child(7){grid-column:3;grid-row:4}.blocks-art .stack-cell:nth-child(8){grid-column:4;grid-row:4}
+.blocks-art .stack-cell:nth-child(9){grid-column:1;grid-row:5}.blocks-art .stack-cell:nth-child(10){grid-column:2;grid-row:5}
+.blocks-art .stack-cell:nth-child(11){grid-column:3;grid-row:5}.blocks-art .stack-cell:nth-child(12){grid-column:4;grid-row:5}
+
+.emoji-art{background:radial-gradient(circle at 45% 37%,#2c547a,#12253b 76%);display:grid;place-items:center}
+.emoji-art>span{font-size:clamp(52px,12vw,72px);line-height:1;filter:drop-shadow(0 5px 10px #05101da0)}
+.art-word{background:radial-gradient(circle,#5c3f91,#1c224e)}.art-mines{background:radial-gradient(circle,#67415b,#22233b)}
+.art-game2048{background:radial-gradient(circle,#95684e,#3a3048)}.art-snake{background:radial-gradient(circle,#245d4b,#15302e)}
+.art-sudoku{background:radial-gradient(circle,#365783,#1a2c4c)}.art-reversi{background:radial-gradient(circle,#296554,#173a3a)}
+.art-checkers{background:radial-gradient(circle,#957453,#3c3544)}.art-chess{background:radial-gradient(circle,#697686,#273647)}
+.art-pinball{background:radial-gradient(circle,#435dba,#171b56)}
+
+/* Dedicated Blocks cover: same small card dimensions as all other games. */
+.blocks-icon-art{display:grid;place-items:center;overflow:hidden;background:#102441}
+.blocks-card-icon{display:block;width:100%;height:100%;object-fit:cover;border-radius:12px}
+
+
+/* My Games v2: unified compact artwork for all twelve games. */
+.blocks-icon-art{background:#0c1c34;border:1px solid #365479;overflow:hidden}
+.blocks-card-icon{display:block;width:100%;height:100%;object-fit:cover;border-radius:12px}
+.arcade-art{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px;padding:10px;border:1px solid #415a80;isolation:isolate}
+.arcade-art span{display:grid;place-items:center;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-weight:900;line-height:1;filter:drop-shadow(0 2px 5px #030814a0);flex-shrink:0}
+.arcade-word{background:radial-gradient(circle at 35% 28%,#514282,#182448 78%);gap:3px}
+.arcade-word span{width:18px;height:26px;background:#6671dd;color:#f5f3ff;border:1px solid #a6b2ff;border-radius:4px;font-size:14px;box-shadow:inset 0 2px 5px #ffffff55}
+.arcade-mines{background:radial-gradient(circle,#334761,#16243c 76%);gap:10px}
+.arcade-mines span{font-size:37px;color:#eaf5ff}.arcade-mines span:nth-child(2){font-size:24px;color:#fbd37c;border:2px solid #6f90af;border-radius:4px;padding:4px}.arcade-mines span:nth-child(3){font-size:22px;color:#ff727f}
+.arcade-game2048{background:radial-gradient(circle at 55% 40%,#7a4e37,#2d3145 78%);gap:3px}
+.arcade-game2048 span{font-size:25px;color:#fff6dd;border-radius:7px;padding:11px 5px;background:#a96d4b;box-shadow:inset 0 2px 5px #fff6}.arcade-game2048 span:nth-child(2){background:#cd9c54}.arcade-game2048 span:nth-child(3){background:#efb25d}
+.arcade-snake{background:radial-gradient(circle,#245b4c,#112c34 78%);gap:2px}
+.arcade-snake span{font-size:25px;color:#60edb7}.arcade-snake span:last-child{color:#ff8173;font-size:19px}
+.arcade-sudoku{background:radial-gradient(circle,#2e567b,#172b43 78%);gap:4px}
+.arcade-sudoku span{font-size:29px;color:#e5f6ff;border:2px solid #86a8c9;border-radius:5px;width:28px;height:38px}
+.arcade-reversi{background:radial-gradient(circle,#326a5b,#10362c 85%);display:grid;grid-template-columns:repeat(2,33px);grid-template-rows:repeat(2,33px);gap:5px}
+.arcade-reversi span{font-size:29px;border-radius:50%;width:33px;height:33px;color:#f2faf9;background:#1e3436;box-shadow:inset 2px 2px 4px #ffffff36,inset -2px -2px 4px #0009}
+.arcade-reversi span:nth-child(2),.arcade-reversi span:nth-child(3){background:#eef2e8;color:#15403a}
+.arcade-checkers{background:radial-gradient(circle,#554d71,#1b2746 80%);gap:10px}
+.arcade-checkers span{width:47px;height:47px;border-radius:50%;font-size:40px;color:#efefff;background:#a5afd0;border:3px solid #d2dafa;box-shadow:0 3px 0 #545e89}
+.arcade-checkers span:last-child{background:#32416e;color:#d0dfff;border-color:#728bb6}
+.arcade-chess{background:radial-gradient(circle at 38% 30%,#6d5c4b,#252b39 85%);gap:8px}
+.arcade-chess span{font-family:"DejaVu Sans","Segoe UI Symbol",serif;font-size:55px;color:#ffffff;text-shadow:0 3px 4px #1e2434;-webkit-text-stroke:.7px #222}
+.arcade-chess span:last-child{color:#1d263b;-webkit-text-stroke:1.3px #e4f0ed}
+.arcade-pinball{background:radial-gradient(circle at 50% 30%,#2b487d,#151932 83%);gap:2px}
+.arcade-pinball span{font-size:38px;color:#62f1ef}.arcade-pinball span:nth-child(2){font-size:38px;color:#f2f5ff;text-shadow:0 0 12px #8ac0ff}
+@media(max-width:355px){.arcade-word span{width:15px;height:23px;font-size:12px}.arcade-chess span{font-size:42px}.arcade-game2048 span{font-size:22px;padding:9px 4px}.arcade-sudoku span{width:23px;font-size:24px}}
+@media(prefers-reduced-motion:reduce){.game-card{transition:none}}
