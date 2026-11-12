@@ -146,7 +146,7 @@ export function mountPinball({mount,stats,message,controls}) {
     const snap=game.snapshot();
     drawPlayfield(ctx,{
       ball:snap.ball,balls:snap.remaining,leftDown:snap.leftDown,rightDown:snap.rightDown,
-      bumpers:snap.bumpers,score:snap.score,now,phase:snap.phase,dropTargets:snap.dropTargets,
+      bumpers:snap.bumpers,score:snap.score,now:snap.tick*16.667,phase:snap.phase,dropTargets:snap.dropTargets,
       reentry:snap.reentry,attackHits:snap.attackHits,kickerLights:snap.kickerLights,
       bonusMultiplier:snap.bonusMultiplier
     });

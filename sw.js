@@ -1,12 +1,12 @@
 // One offline service worker for the complete Mini Games PWA.
-const CACHE = 'mini-games-v7';
+const CACHE = 'mini-games-v8';
 const PRECACHE = [
   './', './index.html', './app.js', './styles.css', './manifest.webmanifest',
   './icons/icon.svg', './icons/blocks.svg', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png',
   './blocks/', './blocks/index.html', './blocks/styles.css', './blocks/js/app.js', './blocks/js/engine.js',
   './match3/', './match3/index.html', './match3/styles.css', './match3/app.js', './match3/engine.js',
   './solitaire/', './solitaire/index.html', './solitaire/styles.css', './solitaire/app.js','./solitaire/motion.js', './solitaire/engine.js',
-  './arcade/', './arcade/index.html', './arcade/styles.css', './arcade/app.js', './arcade/chess.js', './arcade/pinball.js','./arcade/pinball-art.js'
+  './arcade/', './arcade/index.html', './arcade/styles.css', './arcade/app.js', './arcade/chess.js', './arcade/pinball.js', './arcade/pinball-engine.js', './arcade/pinball-cabinet.css','./arcade/pinball-art.js'
 ];
 const BASE = new URL(self.registration.scope).pathname;
 const KNOWN_ROUTES = new Set(['blocks', 'match3', 'solitaire', 'arcade']);

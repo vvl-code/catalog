@@ -57,7 +57,7 @@ function arrow(ctx,x,y,color,rotation=0,scale=1) {
   ctx.fillStyle=color;ctx.shadowBlur=9;ctx.shadowColor=color;ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle='#06102a';ctx.lineWidth=2;ctx.stroke();ctx.restore();
 }
 function drawBumper(ctx,b,now) {
-  const {x,y,r}=b,hot=b.hitAt&&(now-b.hitAt<230);
+  const {x,y,r}=b,hot=b.hitAt>0&&(now-b.hitAt*16.667<230);
   ctx.save();
   ctx.shadowBlur=hot?24:9;ctx.shadowColor=hot?'#f8f1a0':'#ff8085aa';
   disc(ctx,x,y,r+7,gradient(ctx,x,y,r+7,'#9caec5','#2c334b'),'#10192f',2);

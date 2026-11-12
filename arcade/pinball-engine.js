@@ -264,7 +264,7 @@ export class PinballEngine {
       remaining:this.remaining,extraBalls:this.extraBalls,bonusMultiplier:this.bonusMultiplier,
       completedMissions:this.completedMissions,attackHits:this.attackHits,
       dropTargets:[...this.dropTargets],reentry:[...this.reentry],kickerLights:[...this.kickerLights],
-      message:this.message,event:this.event,serial:this.serial,
+      message:this.message,event:this.event,serial:this.serial,tick:this.tick,
       ball:{...this.ball},
       bumpers:this.bumpers.map(b=>({...b})),
       leftDown:this.leftDown,rightDown:this.rightDown

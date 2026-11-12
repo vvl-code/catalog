@@ -54,6 +54,19 @@ for (const [name, viewport] of [
       const frame=await iframe.contentFrame();
       assert.ok(frame,'game iframe navigation works: '+id);
       await frame.waitForSelector(selectors[id],{timeout:10000});
+
+      if(id==='pinball'){
+        const launch=frame.locator('#pinball-launch');
+        await launch.waitFor({state:'visible'});
+        assert.equal(await launch.isEnabled(),true,'Initial pinball launcher is ready');
+        await launch.click();
+        assert.equal(await frame.locator('.pinball-layout').getAttribute('data-phase'),'playing','Pinball launches');
+        assert.equal(await launch.isEnabled(),false,'Cannot launch another ball during play');
+        await frame.locator('#restart').click();
+        assert.equal(await frame.locator('.pinball-layout').getAttribute('data-phase'),'ready','New game re-arms launcher');
+        assert.equal(await launch.isEnabled(),true,'Pinball launcher must reset after restart');
+      }
+
       if (id === 'blocks') assert.equal(new URL(frame.url()).pathname, '/blocks/', 'Blocks must open inside Mini Games');
       if (id === 'pinball') {
         const controls = await frame.evaluate(() => {
