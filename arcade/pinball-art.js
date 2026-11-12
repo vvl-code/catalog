@@ -56,7 +56,7 @@ function arrow(ctx,x,y,color,rotation=0,scale=1) {
   path(ctx,[[0,-10],[9,3],[3,3],[3,11],[-3,11],[-3,3],[-9,3]],true);
   ctx.fillStyle=color;ctx.shadowBlur=9;ctx.shadowColor=color;ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle='#06102a';ctx.lineWidth=2;ctx.stroke();ctx.restore();
 }
-function bumper(ctx,b,now) {
+function drawBumper(ctx,b,now) {
   const {x,y,r}=b,hot=b.hitAt&&(now-b.hitAt<230);
   ctx.save();
   ctx.shadowBlur=hot?24:9;ctx.shadowColor=hot?'#f8f1a0':'#ff8085aa';
@@ -188,7 +188,7 @@ export function drawPlayfield(ctx,{ball,balls,leftDown,rightDown,bumpers,score,n
   tube(ctx,[[235,56],[258,87],[269,132],[263,187]],'#a23a59',6,'#f4c5b3');
   for(let i=0;i<6;i++)light(ctx,247+i%3*7,87+i*20,i%2===0,'#ffd864',3);
   for(const bumper of bumpers){
-    if(bumper.r>=18 && bumper.y<250)bumper(ctx,bumper,now);
+    if(bumper.r>=18 && bumper.y<250)drawBumper(ctx,bumper,now);
   }
   // Distinct smaller posts below the upper bumper cluster.
   for(const b of bumpers){
