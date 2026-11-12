@@ -114,7 +114,7 @@ function paint(){
       col.appendChild(el);
       if(idx<pile.length-1)top+=card.up?faceStep:backStep;
     }
-    col.style.minHeight=pile.length?Math.max(230,top+getCardWidth()*1.48)+'px':'';
+    col.style.minHeight=pile.length?Math.max(getCardWidth()*1.48,top+getCardWidth()*1.48)+'px':'';
     fragment.appendChild(col);
   }
   tableauEl.replaceChildren(fragment);
