@@ -25,7 +25,9 @@ jobs:
           echo $! > /tmp/mygames-preview.pid
           sleep 2
       - name: Capture 12 games on iPhone and Android viewports
-        run: node tests/visual-smoke.mjs
+        run: |
+          node tests/visual-smoke.mjs
+          node tests/responsive-smoke.mjs
       - name: Store screenshots for review
         if: always()
         uses: actions/upload-artifact@v4
