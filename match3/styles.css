@@ -25,3 +25,15 @@
 .gem[data-type="2"]{--gem:#a04aff;--glow:#ae5affdf}.gem[data-type="3"]{--gem:#ffd23e;--glow:#ffe239d9}
 .gem[data-type="4"]{--gem:#25ee79;--glow:#25ff7dcc}.gem[data-type="5"]{--gem:#308aff;--glow:#398fffd9}
 .board-shell{background:#0d2340;border-color:#5b83a1}
+
+/* Fit an 8x8 board inside the available Mini App height without distortion. */
+.shell{width:100%;min-width:0}
+.board-shell{width:min(100%,max(220px,calc(100dvh - 275px)),510px);max-width:100%;aspect-ratio:1}
+@media(max-height:715px){
+ .shell{gap:8px;padding-top:8px;padding-bottom:8px}
+ .board-shell{width:min(100%,max(210px,calc(100dvh - 255px)),510px)}
+ .progress-area{padding-top:9px}
+ .instructions{padding:8px}
+ .status{min-height:24px;font-size:11px}
+}
+@media(max-width:350px){.board-shell{padding:5px}.board{gap:2px}}
