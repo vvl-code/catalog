@@ -111,3 +111,19 @@ button:disabled { cursor: not-allowed; opacity: .4; }
  .game-sidebar{width:82px;flex-basis:82px}
  .control-key{border-radius:8px}
 }
+
+/* Landscape blocks: tall 10x20 board on the right; large touch controls left. */
+@media (orientation:landscape) and (max-height:500px) and (min-width:600px){
+ :root{--board-width:min(180px,calc((100dvh - 18px)/2))}
+ .app-shell{max-width:none;height:100dvh;min-height:0;width:100%;
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(290px,44vw);
+  grid-template-rows:auto auto 1fr auto auto;column-gap:12px;row-gap:4px;
+  padding:6px 12px;overflow-y:auto}
+ .top-bar{grid-column:1;grid-row:1;margin:0}
+ .score-strip{grid-column:1;grid-row:2}
+ .game-area{grid-column:2;grid-row:1/span 5;align-self:start;margin:0}
+ .control-bar{grid-column:1;grid-row:4;margin:0;max-width:none}
+ .gesture-hint{grid-column:1;grid-row:5;margin:0}
+ .game-sidebar{gap:5px}
+ .control-key{min-height:44px}
+}
