@@ -95,13 +95,6 @@ for (const [name, viewport] of [
         assert.ok(fromBox && toBox,'Klondike drag target cards exist');
         const originPoint = {x:fromBox.x+fromBox.width*.5,y:fromBox.y+6};
         const targetPoint = {x:toBox.x+toBox.width*.5,y:toBox.y+12};
-        // Card index 1 is partially overlapped. The exposed top strip must be hittable.
-        const hit = await frame.evaluate(([x,y]) =>
-          document.elementFromPoint(x,y)?.closest('[data-source]')?.dataset.index ?? null,
-          [fromBox.width*.5+fromBox.x-(await frame.frameElement()).boundingBox().then(b=>b.x),
-           originPoint.y-(await frame.frameElement()).boundingBox().then(b=>b.y)]
-        );
-        // A fragment can have its own coordinates in an iframe; the drag itself is authoritative.
         await page.mouse.move(originPoint.x,originPoint.y);
         await page.mouse.down();
         await page.mouse.move(originPoint.x+12,originPoint.y+30,{steps:9});
