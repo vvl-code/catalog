@@ -173,6 +173,7 @@
     url.searchParams.delete('game');
     window.history.replaceState({myGamesView: 'catalog'}, '', url.pathname + url.search + url.hash);
     render();
+    applyUpdatedWorker();
   }
 
   createExtraCards();
@@ -186,12 +187,39 @@
     if (!document.hidden && !currentGame()) displayRecords();
   });
 
-  // One PWA installation and one cache for the complete collection.
-  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js', {scope: './'}).catch(error => {
-        console.warn('Mini Games offline installation unavailable:', error);
-      });
+  // Keep the PWA current without clearing savegames or localStorage.
+  // A new worker is allowed to reload the catalog once, but never interrupt a game.
+  const clientBuild = 'mini-games-v9';
+  const hadControllerAtStartup = !!navigator.serviceWorker?.controller;
+  let pendingVersionReload = false;
+  function applyUpdatedWorker() {
+    if (!pendingVersionReload || currentGame()) return;
+    pendingVersionReload = false;
+    try {
+      const guard = 'reloaded-for-' + clientBuild;
+      if (sessionStorage.getItem(guard)) return;
+      sessionStorage.setItem(guard, '1');
+    } catch { /* Private mode may restrict session storage. */ }
+    window.location.reload();
+  }
+  if ('serviceWorker' in navigator &&
+      (location.protocol === 'https:' || ['localhost','127.0.0.1'].includes(location.hostname))) {
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!hadControllerAtStartup) return;
+      pendingVersionReload = true;
+      applyUpdatedWorker();
+    });
+    window.addEventListener('load', async () => {
+      try {
+        const registration = await navigator.serviceWorker.register('./sw.js', {
+          scope:'./',updateViaCache:'none'
+        });
+        await registration.update().catch(error => {
+          console.warn('Mini Games update check unavailable:',error);
+        });
+      } catch(error) {
+        console.warn('Mini Games offline installation unavailable:',error);
+      }
     });
   }
 
