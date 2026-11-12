@@ -23,8 +23,8 @@ export function mountPinball({mount,stats,message,controls}) {
   // Physics and all render coordinates remain in logical 320x500 units.
   function resizeBitmap() {
     const dpr = Math.min(3, Math.max(1, window.devicePixelRatio || 1));
-    const physicalWidth = Math.max(W, Math.round(canvas.clientWidth * dpr));
-    const physicalHeight = Math.max(H, Math.round(canvas.clientHeight * dpr));
+    const physicalWidth = Math.max(W, Math.ceil(canvas.clientWidth * dpr) + 2);
+    const physicalHeight = Math.max(H, Math.ceil(canvas.clientHeight * dpr) + 2);
     if (canvas.width !== physicalWidth || canvas.height !== physicalHeight) {
       canvas.width = physicalWidth;
       canvas.height = physicalHeight;
