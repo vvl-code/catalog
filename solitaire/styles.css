@@ -25,3 +25,11 @@ footer{margin-top:auto;text-align:center;color:#7daa9a;font-size:9px;letter-spac
 /* Material card motion uses Web Animations; subtle depth while cards fly. */
 .card{backface-visibility:hidden;will-change:transform}
 @media(prefers-reduced-motion:reduce){.card{will-change:auto}}
+
+
+/* A face-up card can be dragged with the entire ordered run beneath it.
+   Presentation clones follow the touch; only engine.js decides legal drops. */
+.card.run-selected{outline:2px solid #f7de86;outline-offset:-1px;box-shadow:0 0 10px #ffe19b7a;z-index:990!important}
+.card.motion-clone{position:fixed!important;touch-action:none;pointer-events:none!important;z-index:2000;will-change:transform;box-shadow:0 10px 25px #001c18bb,0 0 8px #a9fce677}
+.tableau-col:has(.card.selected){border-color:#72eeca66}
+@media(prefers-reduced-motion:reduce){.card.motion-clone{transition:none;animation:none}}
