@@ -181,7 +181,7 @@ function snakeGame(){
  }
  function turn(dir){const dx=direction[0],dy=direction[1];if(dir[0]===-dx&&dir[1]===-dy)return;nextDirection=dir;}
  function tick(){
-  if(ended||document.hidden)return;
+  if(ended||document.hidden||document.body.dataset.menuOpen==='true')return;
   direction=nextDirection;
   const [x,y]=snake[0],head=[x+direction[0],y+direction[1]],ate=food&&head[0]===food[0]&&head[1]===food[1];
   const body=ate?snake:snake.slice(0,-1);

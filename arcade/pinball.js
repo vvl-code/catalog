@@ -153,7 +153,7 @@ export function mountPinball({mount,stats,message,controls}) {
   }
   function loop(now){
     if(!running)return;
-    if(!document.hidden){
+    if(!document.hidden&&document.body.dataset.menuOpen!=='true'){
       const dt=last?Math.min(2.5,(now-last)/16.667):1;
       game.step(dt);
       updateUI();
@@ -165,6 +165,7 @@ export function mountPinball({mount,stats,message,controls}) {
   function launchBall(power=1){if(game.launch(power)){spaceDownAt=null;updateUI(true);return true;}return false;}
   function restart(){
     game.newGame();spaceDownAt=null;
+    left.classList.remove('is-pressed');right.classList.remove('is-pressed');
     updateUI(true);
   }
 
@@ -215,6 +216,8 @@ export function mountPinball({mount,stats,message,controls}) {
     left.classList.remove('is-pressed');right.classList.remove('is-pressed');
     spaceDownAt=null;last=0;
   }
+  const menuPause=event=>{if(event.detail.open)blurred();};
+  window.addEventListener('minigames:menu',menuPause);
   window.addEventListener('keydown',keydown);
   window.addEventListener('keyup',keyup);
   window.addEventListener('blur',blurred);
@@ -228,6 +231,7 @@ export function mountPinball({mount,stats,message,controls}) {
       running=false;cancelAnimationFrame(frameId);
       observer?.disconnect();
       window.removeEventListener('resize',resizeBitmap);
+      window.removeEventListener('minigames:menu',menuPause);
       window.removeEventListener('keydown',keydown);
       window.removeEventListener('keyup',keyup);
       window.removeEventListener('blur',blurred);

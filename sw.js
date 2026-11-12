@@ -1,7 +1,8 @@
 // Mini Games offline worker. Network-first avoids mixing old modules with new HTML.
 // All cached assets are retained for offline use, with no change to localStorage.
-const CACHE = 'mini-games-v9';
+const CACHE = 'mini-games-v10';
 const PRECACHE = [
+  './shared/compact.css', './shared/play-ui.js', './shared/host-ui.js',
   './', './index.html', './app.js', './styles.css', './manifest.webmanifest',
   './icons/icon.svg', './icons/blocks.svg', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png',
   './blocks/', './blocks/index.html', './blocks/styles.css', './blocks/js/app.js', './blocks/js/engine.js',

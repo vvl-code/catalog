@@ -123,14 +123,7 @@ try {
        assert.ok(launchBox.bottom<=launchBox.height+2,
          name+' pinball launcher must remain visible '+JSON.stringify(launchBox));
      }
-     if(width>=960 && height>=620) {
-       const cabinet=await frame.locator('.pinball-scoreboard').evaluate(el=>{
-         const r=el.getBoundingClientRect(),s=getComputedStyle(el);
-         return {width:r.width,height:r.height,display:s.display};
-       });
-       assert.ok(cabinet.display!=='none'&&cabinet.width>=180,
-         name+' must show classic pinball score cabinet '+JSON.stringify(cabinet));
-     }
+     assert.equal(await frame.locator('.pinball-scoreboard').isVisible(),false,'Secondary cabinet is not in the main play area');
 
      assert.ok(bounds.controls.every(r=>r.left>=-2&&r.right<=bounds.w+2),
        name+' Pinball flippers extend beyond available width: '+JSON.stringify(bounds));

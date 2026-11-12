@@ -62,7 +62,10 @@ for (const [name, viewport] of [
         await launch.click();
         assert.equal(await frame.locator('.pinball-layout').getAttribute('data-phase'),'playing','Pinball launches');
         assert.equal(await launch.isEnabled(),false,'Cannot launch another ball during play');
+        await page.locator('#game-menu-button').click();
+        await frame.locator('#mg-game-menu[open]').waitFor();
         await frame.locator('#restart').click();
+        await frame.locator('#mg-game-menu').waitFor({state:'hidden'});
         assert.equal(await frame.locator('.pinball-layout').getAttribute('data-phase'),'ready','New game re-arms launcher');
         assert.equal(await launch.isEnabled(),true,'Pinball launcher must reset after restart');
       }

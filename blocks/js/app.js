@@ -261,6 +261,11 @@ window.addEventListener('keydown', e => {
     e.preventDefault(); engine.togglePause(); previousTime = 0; dirty = true;
   } else if (e.key === 'Enter' && !e.repeat && engine.phase !== 'playing') start();
 });
+let menuPaused=false;
+window.addEventListener('minigames:menu',event=>{
+  if(event.detail.open){menuPaused=engine.phase==='playing';if(menuPaused)suspend();}
+  else if(menuPaused&&engine.phase==='paused'){engine.togglePause();menuPaused=false;previousTime=0;dirty=true;}
+});
 function suspend() {
   engine.pause(); recordScore(); saveSession(); previousTime = 0; dirty = true;
 }

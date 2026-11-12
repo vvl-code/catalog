@@ -29,9 +29,10 @@ function selectionEquals(a,b){
   if(a.kind==='foundation')return a.suit===b.suit;
   return true;
 }
-function getCardWidth(){return Math.min(70, (window.innerWidth-34)/7-2);}
-function getFaceStep(){return window.innerWidth>=500?27:Math.min(26,Math.max(17,window.innerWidth*.05));}
-function getBackStep(){return window.innerWidth>=500?16:Math.min(14,Math.max(10,window.innerWidth*.028));}
+function layoutNumber(name, fallback) {const n=parseFloat(getComputedStyle(document.querySelector('.shell')).getPropertyValue(name));return Number.isFinite(n)?n:fallback;}
+function getCardWidth(){return layoutNumber('--card-w',Math.min(70,(window.innerWidth-34)/7-2));}
+function getFaceStep(){return layoutNumber('--face-step',Math.min(26,Math.max(17,window.innerWidth*.05)));}
+function getBackStep(){return layoutNumber('--back-step',Math.min(14,Math.max(10,window.innerWidth*.028)));}
 function sourceFrom(el){
   if(!el||!el.dataset.source)return null;
   const kind=el.dataset.source;
@@ -252,4 +253,5 @@ $('restart').addEventListener('click',restart);
 $('again').addEventListener('click',restart);
 window.addEventListener('pagehide',()=>{motion.stopAll();store();});
 window.addEventListener('resize',paint);
+window.addEventListener('minigames:layout',paint);
 paint();

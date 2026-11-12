@@ -189,7 +189,7 @@
 
   // Keep the PWA current without clearing savegames or localStorage.
   // A new worker is allowed to reload the catalog once, but never interrupt a game.
-  const clientBuild = 'mini-games-v9';
+  const clientBuild = 'mini-games-v10';
   const hadControllerAtStartup = !!navigator.serviceWorker?.controller;
   let pendingVersionReload = false;
   function applyUpdatedWorker() {
