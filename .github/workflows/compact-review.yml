@@ -1,0 +1,21 @@
+name: Compact layout review
+on:
+  push:
+    branches: [ux/compact-play-v10]
+permissions:
+  contents: read
+jobs:
+  source-snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Export tracked source only
+        run: git archive --format=tar --output=/tmp/mini-games-source.tar HEAD
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini-games-source
+          path: /tmp/mini-games-source.tar
+          retention-days: 1
