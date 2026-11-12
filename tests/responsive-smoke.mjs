@@ -73,7 +73,7 @@ try {
        name+' Solitaire selected column has unwanted outline: '+result.border);
     }
     if(id==='pinball'){
-     const bounds=await frame.evaluate(()=>{
+     const bounds=await frame.locator('body').evaluate(()=>{
       const stage=document.querySelector('.pinball-wrapper').getBoundingClientRect();
       const flippers=[...document.querySelectorAll('.flipper-controls button')].map(e=>e.getBoundingClientRect());
       return {stage:{left:stage.left,right:stage.right},controls:flippers.map(r=>({left:r.left,right:r.right,top:r.top,bottom:r.bottom})),w:innerWidth};
