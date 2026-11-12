@@ -19,6 +19,24 @@ export function mountPinball({mount,stats,message,controls}) {
     {x:146,y:213,r:22,c:'#e882fa'},
     {x:81,y:288,r:14,c:'#6da6ff'},
     {x:223,y:274,r:15,c:'#69fab4'}];
+  // Keep the playfield crisp when its CSS size grows on large displays.
+  // Physics and all render coordinates remain in logical 320x500 units.
+  function resizeBitmap() {
+    const dpr = Math.min(3, Math.max(1, window.devicePixelRatio || 1));
+    const physicalWidth = Math.max(W, Math.round(canvas.clientWidth * dpr));
+    const physicalHeight = Math.max(H, Math.round(canvas.clientHeight * dpr));
+    if (canvas.width !== physicalWidth || canvas.height !== physicalHeight) {
+      canvas.width = physicalWidth;
+      canvas.height = physicalHeight;
+    }
+    ctx.setTransform(canvas.width / W, 0, 0, canvas.height / H, 0, 0);
+  }
+  const observer = typeof ResizeObserver === 'function'
+    ? new ResizeObserver(resizeBitmap) : null;
+  observer?.observe(canvas);
+  window.addEventListener('resize',resizeBitmap);
+  resizeBitmap();
+
   let running=true,last=0,request=0;
   let leftDown=false,rightDown=false,score=0,balls=3,bumperGlow=new Map();
   let ball={x:291,y:455,vx:0,vy:0,active:false},playing=false;
@@ -130,5 +148,5 @@ export function mountPinball({mount,stats,message,controls}) {
   window.addEventListener('keydown',keyboard);
   window.addEventListener('keyup',keyboard);
   start();request=requestAnimationFrame(frame);
-  return {restart:start,cleanup(){running=false;cancelAnimationFrame(request);window.removeEventListener('keydown',keyboard);window.removeEventListener('keyup',keyboard);}};
+  return {restart:start,cleanup(){running=false;cancelAnimationFrame(request);observer?.disconnect();window.removeEventListener('resize',resizeBitmap);window.removeEventListener('keydown',keyboard);window.removeEventListener('keyup',keyboard);}};
 }
