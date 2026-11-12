@@ -118,3 +118,85 @@
  .pinball-mode .controls>button{width:100%}
  .pinball-mode .flipper-controls{width:auto}
 }
+
+
+/* Desktop and wide Telegram WebView: use the available area, not the
+   legacy 570px shell / 300px pinball caps. Phone layouts stay unchanged. */
+@media (min-width:960px) and (min-height:620px) {
+  .shell,
+  .pinball-mode .shell {
+    max-width:1500px;
+    width:100%;
+    height:100dvh;
+    min-height:0;
+    margin:0 auto;
+    padding:clamp(12px,2dvh,24px) clamp(18px,2vw,36px);
+    display:grid;
+    grid-template-columns:clamp(290px,26vw,390px) minmax(0,1fr);
+    grid-template-rows:auto auto minmax(0,1fr) auto auto;
+    align-items:start;
+    column-gap:clamp(24px,3.5vw,64px);
+    row-gap:clamp(8px,1.5dvh,18px);
+    overflow:hidden;
+  }
+  .top,.pinball-mode .top {grid-column:1;grid-row:1;min-height:52px;}
+  .identity h1,.pinball-mode .identity h1 {font-size:clamp(21px,1.5vw,28px);}
+  .identity p {font-size:11px;}
+  .stats {grid-column:1;grid-row:2;}
+  .stats .stat,.pinball-mode .stats .stat {padding:12px 6px;}
+  .stats .stat strong,.pinball-mode .stats .stat strong {font-size:clamp(20px,1.8vw,28px);}
+  .message,.pinball-mode .message {grid-column:1;grid-row:3;align-self:start;text-align:left;line-height:1.5;font-size:14px;}
+  .controls,.pinball-mode .controls {
+    grid-column:1;grid-row:4;align-self:start;width:100%;
+    justify-content:stretch;align-items:stretch;margin:0;
+  }
+  .controls>button,.pinball-mode .controls>button {width:100%;min-height:52px;font-size:15px;}
+  .help,.pinball-mode .help {
+    grid-column:1;grid-row:5;display:flex;
+    padding:13px;align-self:start;
+  }
+  .help p {font-size:13px;}
+  footer,.pinball-mode footer {display:none;}
+  .game,.pinball-mode .game {
+    grid-column:2;grid-row:1/-1;
+    margin:0;
+    justify-self:center;align-self:center;
+    width:100%;height:100%;
+    max-width:100%;min-width:0;min-height:0;
+    flex:none;
+    align-items:center;justify-content:center;
+  }
+  .game .grid,.game .number-grid,.game .sudoku-grid {
+    width:min(100%,calc(100dvh - 48px),870px);
+    max-width:100%;
+  }
+  .game .snake-stage {
+    width:min(100%,calc(100dvh - 175px),690px);
+    max-width:100%;
+  }
+  .game .word-board {width:min(100%,640px);}
+  .game .word-input {width:min(100%,640px);}
+  .game .word-board .letter {height:clamp(58px,6.5dvh,85px);}
+  .pinball-mode .pinball-wrapper {
+    position:relative;
+    width:min(100%,calc((100dvh - 42px)*0.64),620px);
+    max-width:none;
+    max-height:none;
+    aspect-ratio:320/500;
+    margin:auto;
+  }
+  .pinball-mode .pinball-wrapper .pinball-stage {
+    display:block;width:100%;height:100%;
+    max-width:none;max-height:none;
+    aspect-ratio:auto;
+    border-width:5px;
+  }
+  .pinball-mode .flipper-controls {
+    left:3%;right:3%;bottom:2.5%;
+    width:auto;gap:14px;
+  }
+  .pinball-mode .flipper-controls button {
+    min-height:clamp(52px,6dvh,64px);
+    font-size:clamp(14px,1.05vw,18px);
+  }
+}
