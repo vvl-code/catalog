@@ -1,4 +1,5 @@
 import {SUITS,SUIT_NAMES,rankName,rank,suit,red,newGame,validGame,selectionCards,canMove,moveCards,dealStock,hint} from './engine.js';
+import {createCardMotion} from './motion.js';
 'use strict';
 const $ = id=>document.getElementById(id);
 const SAVE_KEY='mygames-solitaire-state-v1', WINS_KEY='mygames-solitaire-wins-v1';
@@ -17,6 +18,7 @@ function load(){
   return {game:newGame(),past:[]};
 }
 let {game,past}=load(), selected=null, hintFrom=null, suppressClick=false;
+const motion=createCardMotion();
 function store(){
   write(SAVE_KEY,JSON.stringify({game,past}));
 }
@@ -61,6 +63,8 @@ function makeCard(id,up,from){
     if(from.kind==='tableau'){button.dataset.column=String(from.column);button.dataset.index=String(from.index);}
     if(from.kind==='foundation')button.dataset.suit=String(from.suit);
     if(selectionEquals(selected,from))button.classList.add('selected');
+    else if(selected?.kind==='tableau'&&from.kind==='tableau'&&
+            selected.column===from.column&&from.index>=selected.index)button.classList.add('run-selected');
     if(selectionEquals(hintFrom,from))button.classList.add('hint');
   }else{
     button.tabIndex=-1;
@@ -120,55 +124,30 @@ function remember(){
   past.push(JSON.stringify(game));
   if(past.length>70)past.shift();
 }
-function captureCardPositions(ids) {
-  const result=new Map();
-  for (const id of ids) {
-    const el=document.querySelector('[data-card-id="'+id+'"]');
-    if (el) result.set(String(id),el.getBoundingClientRect());
-  }
-  return result;
-}
-function animateFromPrevious(previous, ids, originRect=null) {
-  // FLIP: preserve intuitive physical card movement even though the tableau is re-rendered.
-  if (!('animate' in Element.prototype) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  for (const [index,id] of ids.entries()) {
-    const el=document.querySelector('[data-card-id="'+id+'"]');
-    const old=previous.get(String(id)) || originRect;
-    if (!el || !old) continue;
-    const next=el.getBoundingClientRect();
-    const dx=old.left-next.left, dy=old.top-next.top;
-    const delay=index*28;
-    el.style.zIndex='2000';
-    el.animate(
-      [{transform:'translate('+dx+'px,'+dy+'px) scale(.96)',opacity:.82},
-       {transform:'translate(0,0) scale(1)',opacity:1}],
-      {duration:310+delay,delay,easing:'cubic-bezier(.18,.72,.19,1.02)'}
-    ).finished.catch(()=>{}).finally(()=>{if(el.isConnected)el.style.zIndex='';});
-  }
-}
-function commitMove(from,to){
+function commitMove(from,to,dragSnapshot=null){
   if(!canMove(game,from,to))return false;
   const moving=selectionCards(game,from);
-  const previous=captureCardPositions(moving);
+  const snapshot=dragSnapshot||motion.collect(moving);
   remember();
   moveCards(game,from,to);
   selected=null;hintFrom=null;
   if(game.won){
     wins++;write(WINS_KEY,String(wins));
     say('Поздравляем! Все карты собраны.');
-  }else say('Ход выполнен.');
+  }else say(moving.length>1 ? 'Перенесено карт: '+moving.length : 'Ход выполнен.');
   store();paint();
-  animateFromPrevious(previous,moving);
+  motion.animate(snapshot);
   return true;
 }
 function draw(){
   if(game.won)return;
   if(!game.stock.length&&!game.waste.length){say('Колода пуста.');return;}
   const origin=$('stock').getBoundingClientRect();
+  const wasDrawing=game.stock.length>0;
   remember();dealStock(game);selected=null;hintFrom=null;
-  say(game.stock.length||game.waste.length?'Карта открыта.':'Колода пуста.');
+  say(wasDrawing?'Карта открыта.':'Колода перевёрнута.');
   store();paint();
-  if(game.waste.length)animateFromPrevious(new Map(),[game.waste[game.waste.length-1]],origin);
+  if(wasDrawing&&game.waste.length)motion.dealFrom(origin,game.waste[game.waste.length-1]);
 }
 function automatic(from){
   if(!from)return false;
@@ -197,22 +176,49 @@ tableauEl.addEventListener('click',handleClick);
 foundations.forEach(f=>f.addEventListener('click',handleClick));
 
 let gesture=null;
-document.addEventListener('pointerdown',(event)=>{
-  const el=event.target.closest('[data-source]');
-  if(!el || game.won)return;
-  gesture={from:sourceFrom(el),x:event.clientX,y:event.clientY,id:event.pointerId};
-},{passive:true});
-document.addEventListener('pointerup',(event)=>{
-  if(!gesture || gesture.id!==event.pointerId)return;
-  const start=gesture;gesture=null;
-  if(Math.hypot(event.clientX-start.x,event.clientY-start.y)<22)return;
-  suppressClick=true;setTimeout(()=>{suppressClick=false;},200);
+document.addEventListener('pointerdown',event=>{
+  const card=event.target.closest('[data-source]');
+  if(!card || game.won || event.button>0 || !event.isPrimary)return;
+  const from=sourceFrom(card);
+  const ids=selectionCards(game,from);
+  if(!ids.length)return;
+  gesture={from, ids, snapshot:motion.collect(ids), x:event.clientX,y:event.clientY,id:event.pointerId,dragging:false};
+}, {passive:true});
+
+document.addEventListener('pointermove',event=>{
+  const g=gesture;
+  if(!g || g.id!==event.pointerId || game.won)return;
+  const dx=event.clientX-g.x,dy=event.clientY-g.y;
+  if(!g.dragging && Math.hypot(dx,dy)<9)return;
+  if(!g.dragging){
+    g.dragging=true;
+    selected=null;
+    hintFrom=null;
+    say(g.ids.length>1?'Перенеси выбранную последовательность ('+g.ids.length+' карты).':'Перетащи карту в нужную стопку.');
+  }
+  motion.follow(g.snapshot,dx,dy);
+  if(event.cancelable)event.preventDefault();
+}, {passive:false});
+
+document.addEventListener('pointerup',event=>{
+  const g=gesture;
+  if(!g || g.id!==event.pointerId)return;
+  gesture=null;
+  if(!g.dragging)return;
+  suppressClick=true;
+  window.setTimeout(()=>{suppressClick=false;},250);
   const target=document.elementFromPoint(event.clientX,event.clientY);
   const to=destinationFrom(target);
-  if(to&&commitMove(start.from,to))return;
-  say('Сюда переместить карту нельзя.');
+  if(!to || !commitMove(g.from,to,g.snapshot)){
+    motion.reject(g.snapshot);
+    say('Такой перенос недопустим. Правило: по убыванию, чередуя цвета.');
+  }
 });
-document.addEventListener('pointercancel',()=>{gesture=null;});
+
+document.addEventListener('pointercancel',()=>{
+  if(gesture?.snapshot)motion.reject(gesture.snapshot);
+  gesture=null;
+});
 $('undo').addEventListener('click',()=>{
   if(!past.length||game.won)return;
   try{
@@ -239,10 +245,11 @@ $('hint').addEventListener('click',()=>{
 });
 function restart(){
   if(!game.won&&game.moves>0&&!window.confirm('Раздать новую партию? Текущий расклад будет потерян.'))return;
+  motion.stopAll();gesture=null;
   game=newGame();past=[];selected=null;hintFrom=null;store();paint();say('Новая раздача. Удачи!');
 }
 $('restart').addEventListener('click',restart);
 $('again').addEventListener('click',restart);
-window.addEventListener('pagehide',store);
+window.addEventListener('pagehide',()=>{motion.stopAll();store();});
 window.addEventListener('resize',paint);
 paint();
