@@ -92,3 +92,22 @@ button:disabled { cursor: not-allowed; opacity: .4; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
 }
+
+/* The available viewport is the Mini Games iframe, not the phone's full screen. */
+:root{--board-width:max(135px,min(calc(100vw - 133px),calc((100dvh - 265px)/2),340px))}
+.app-shell{width:100%;min-width:0}
+.control-bar{width:100%;gap:clamp(3px,1.5vw,7px);margin-top:clamp(6px,1.7dvh,16px)}
+.control-key{min-height:clamp(44px,8dvh,67px)}
+@media(max-height:690px){
+ .app-shell{padding-top:6px}
+ .top-bar{margin-bottom:6px}
+ .game-sidebar{gap:6px}
+ .board-accent{margin-top:4px}
+ .control-key{gap:3px}
+ .gesture-hint{font-size:9px;line-height:1.25}
+}
+@media(max-width:340px){
+ .game-area{gap:6px}
+ .game-sidebar{width:82px;flex-basis:82px}
+ .control-key{border-radius:8px}
+}
