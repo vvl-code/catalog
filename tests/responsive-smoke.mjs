@@ -48,7 +48,7 @@ try {
     await frame.locator(selectors[id]).waitFor({state:'visible',timeout:15000});
     const geometry=await frame.locator(selectors[id]).evaluate(el=>{
      const rect=el.getBoundingClientRect();
-     return {x:rect.x,right:rect.right,width:rect.width,height:rect.height,
+     return {x:rect.x,y:rect.y,right:rect.right,bottom:rect.bottom,width:rect.width,height:rect.height,
        viewWidth:innerWidth,viewHeight:innerHeight,
        overflow:document.documentElement.scrollWidth-innerWidth,
        documentHeight:document.documentElement.scrollHeight};
@@ -57,6 +57,12 @@ try {
     assert.ok(geometry.x>=-2&&geometry.right<=geometry.viewWidth+2,
       name+' '+id+' playfield clipped horizontally '+JSON.stringify(geometry));
     assert.ok(geometry.height>0&&geometry.width>0,name+' '+id+' playfield missing');
+
+    if(name==='landscape' && ['blocks','match3','game2048','mines','reversi','checkers','chess','sudoku','pinball'].includes(id)){
+      assert.ok(geometry.y>=-2&&geometry.bottom<=geometry.viewHeight+3,
+        id+' must fit vertically in landscape view, got '+JSON.stringify(geometry));
+    }
+
     if(['match3','sudoku','reversi','checkers','chess','game2048'].includes(id)){
       const ratio=geometry.width/geometry.height;
       assert.ok(ratio>=.92&&ratio<=1.08,name+' '+id+' game board distorted: '+ratio);
