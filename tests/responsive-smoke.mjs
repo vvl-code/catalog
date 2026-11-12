@@ -6,7 +6,9 @@ const origin=process.env.PREVIEW_URL||'http://127.0.0.1:8123';
 const cases=[
   ['small-phone',320,568],
   ['large-phone',430,932],
-  ['landscape',844,390]
+  ['landscape',844,390],
+  ['desktop-laptop',1366,768],
+  ['telegram-desktop',1725,900]
 ];
 const selectors={
  blocks:'#board-frame',
@@ -29,7 +31,7 @@ const failures=[];
 try {
  for(const [name,width,height] of cases){
   const context=await browser.newContext({
-   viewport:{width,height},deviceScaleFactor:2,isMobile:true,hasTouch:true
+   viewport:{width,height},deviceScaleFactor:width>=960?1:2,isMobile:width<960,hasTouch:width<960
   });
   const page=await context.newPage();
   const errors=[];
@@ -61,6 +63,33 @@ try {
     if(name==='landscape' && ['blocks','match3','game2048','mines','reversi','checkers','chess','sudoku','pinball'].includes(id)){
       assert.ok(geometry.y>=-2&&geometry.bottom<=geometry.viewHeight+3,
         id+' must fit vertically in landscape view, got '+JSON.stringify(geometry));
+    }
+
+    if(name==='desktop-laptop'||name==='telegram-desktop'){
+      const minHeight={
+        blocks:.56,match3:.64,solitaire:.58,word:.28,
+        mines:.64,game2048:.64,snake:.48,sudoku:.64,
+        reversi:.64,checkers:.64,chess:.64,pinball:.74
+      }[id];
+      // Scale relative to the iframe's actual available height, not to device pixels.
+      if(id!=='solitaire' && id!=='word') {
+        assert.ok(geometry.height >= geometry.viewHeight * minHeight,
+          name+' '+id+' is still phone-sized in Telegram Desktop '+JSON.stringify(geometry));
+      }
+      if(id==='pinball'){
+        assert.ok(geometry.width >= geometry.viewHeight*.43,
+          name+' pinball must expand with desktop viewport '+JSON.stringify(geometry));
+        const crisp=await frame.locator('.pinball-stage').evaluate(canvas=>({
+          bitmapWidth:canvas.width,cssWidth:canvas.clientWidth,
+          bitmapHeight:canvas.height,cssHeight:canvas.clientHeight
+        }));
+        assert.ok(crisp.bitmapWidth>=crisp.cssWidth && crisp.bitmapHeight>=crisp.cssHeight,
+          name+' pinball bitmap must match scaled canvas '+JSON.stringify(crisp));
+      }
+      if(id==='solitaire'){
+        const cardWidth=await frame.locator('.tableau-col .card').first().evaluate(el=>el.getBoundingClientRect().width);
+        assert.ok(cardWidth>=78,name+' Solitaire card width should expand on desktop: '+cardWidth);
+      }
     }
 
     if(['match3','sudoku','reversi','checkers','chess','game2048'].includes(id)){
