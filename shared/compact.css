@@ -1,0 +1,111 @@
+/* Mini Games v10 — compact, playfield-first UI. Loaded last intentionally. */
+.mg-bar{box-sizing:border-box;display:flex;align-items:center;gap:8px;height:48px;min-height:48px;flex:none;width:100%;padding:0 6px;background:#101f34;color:#edf5ff;border-bottom:1px solid #304762;font-family:system-ui,-apple-system,sans-serif}
+.mg-bar .mg-back,.mg-bar .mg-more{display:grid;place-items:center;flex:0 0 44px;min-width:44px;min-height:44px;height:44px;padding:0;border:0;border-radius:9px;background:transparent;color:#66e3ce;cursor:pointer;text-decoration:none;font-size:30px;line-height:1}
+.mg-bar .mg-name{font-size:14px;font-weight:800;letter-spacing:0;white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.mg-bar .mg-more{margin-left:0;font-size:28px}
+.mg-bar .mg-hud{display:flex;gap:clamp(8px,2vw,22px);margin-left:auto;align-items:center;min-width:0}
+.mg-hud-item{display:flex;flex-direction:column;align-items:flex-end;line-height:1.2;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mg-hud-item small{font-size:8px;letter-spacing:.04em;color:#a6b9cd}.mg-hud-item b{font-size:14px;letter-spacing:0}
+.mg-bar button:focus-visible,.mg-bar a:focus-visible{outline:2px solid #64e6d1;outline-offset:-3px}
+.mg-bar button:disabled{opacity:.35;cursor:default}
+html.mg-play,body.mg-play{width:100%;height:100%;min-height:0;margin:0;overscroll-behavior:none;overflow:hidden}
+body.mg-play{--mg-square:250px;--mg-pin-w:230px;--mg-pin-h:360px;--mg-word-w:250px;color-scheme:dark}
+body.mg-play [hidden]{display:none!important}
+body.mg-play .shell,body.mg-play .app-shell{box-sizing:border-box;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:6px;max-width:none;min-width:0;min-height:0;width:100%;height:100dvh;margin:0;padding:6px max(6px,env(safe-area-inset-right)) max(6px,env(safe-area-inset-bottom)) max(6px,env(safe-area-inset-left));overflow:hidden}
+body.mg-play[data-embedded="false"] .mg-shell{padding-top:0}
+body.mg-play[data-embedded="false"] .mg-bar{width:calc(100% + 12px);margin-left:-6px}
+body.mg-play .app-shell>main{display:contents}
+body.mg-play .mg-stage{box-sizing:border-box;position:relative;display:flex;flex:1 1 0%;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-width:0;min-height:0;max-width:none;max-height:none;width:100%;height:auto;margin:0;grid-area:auto;align-self:stretch;overflow:hidden}
+body.mg-play .mg-controls{box-sizing:border-box;display:flex;flex:none;align-self:center;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;width:100%;max-width:900px;min-height:0;margin:0;padding:0;grid-area:auto}
+body.mg-play .mg-controls button{box-sizing:border-box;min-height:44px;touch-action:manipulation;font-size:15px;padding:6px 12px}
+body.mg-play .mg-controls>button{flex:1;max-width:260px}
+/* Existing rules and feedback no longer reserve rows outside the playfield. */
+body.mg-play .mg-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);width:max-content;max-width:85%;height:auto;min-height:0;z-index:3000;padding:9px 14px;border:1px solid #496681;border-radius:12px;background:#0b2037f5;color:#dffbf1;box-shadow:0 4px 20px #0005;font:13px/1.35 system-ui,sans-serif;text-align:center;opacity:0;pointer-events:none;margin:0;clip-path:inset(50%)}
+body.mg-play .mg-toast-visible{opacity:1;clip-path:none}
+/* Boards grow to the largest undistorted rectangle that actually fits. */
+body.mg-play #game>.grid,body.mg-play #game>.number-grid,body.mg-play #game>.sudoku-grid,body.mg-play #game>.snake-stage{box-sizing:border-box;flex:none;width:var(--mg-square);height:var(--mg-square);max-width:100%;max-height:100%;aspect-ratio:1;margin:0}
+body.mg-play #game>.word-board{flex:none;width:var(--mg-word-w);height:calc(var(--mg-word-w)*1.2);max-width:100%;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:repeat(6,minmax(0,1fr));gap:5px;margin:0}
+body.mg-play .word-board .letter{height:auto;min-height:0;font-size:clamp(19px,5vw,42px)}
+body.mg-play #game>.word-input{flex:none;width:min(100%,var(--mg-word-w));margin:0;height:48px}
+body.mg-play .key-legend{display:none}
+body.mg-play .chess-grid .square{font-size:clamp(22px,calc(var(--mg-square)*.085),82px)}
+body.mg-play .checker-grid .square{font-size:clamp(20px,calc(var(--mg-square)*.075),76px)}
+body.mg-play .sudoku-grid button{font-size:clamp(14px,calc(var(--mg-square)*.05),42px)}
+body.mg-play .num-cell{font-size:clamp(24px,calc(var(--mg-square)*.105),88px)}
+body.mg-play .number-pad{width:100%;max-width:none;display:grid;grid-template-columns:repeat(9,minmax(0,1fr));margin:0;gap:3px}
+body.mg-play .number-pad button{min-width:0;padding:5px 0;height:44px;font-size:18px}
+body.mg-play .snake-pad{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:44px;gap:6px;width:100%;margin:0}
+body.mg-play .snake-pad button{grid-column:auto;grid-row:auto;min-height:44px;font-size:21px}
+body.mg-play .snake-pad .left{order:1}body.mg-play .snake-pad .up{order:2}body.mg-play .snake-pad .down{order:3}body.mg-play .snake-pad .right{order:4}
+/* Pinball: the entire table is visible. Flipper touch targets sit UNDER it. */
+body.mg-play .pinball-layout{display:flex;flex:1;flex-direction:column;align-items:center;justify-content:center;min-height:0;min-width:0;max-width:none;width:100%;height:100%;gap:0}
+body.mg-play .pinball-layout .pinball-wrapper{box-sizing:border-box;position:relative;flex:none;max-width:none;max-height:none;width:var(--mg-pin-w);height:var(--mg-pin-h);aspect-ratio:320/500;margin:0}
+body.mg-play .pinball-layout .pinball-stage{box-sizing:border-box;display:block;width:100%;height:100%;max-width:none;max-height:none;aspect-ratio:auto;border-width:3px}
+body.mg-play .mg-controls .flipper-controls{position:static;display:flex;flex:1 0 100%;width:100%;max-width:900px;gap:8px;margin:0;padding:0}
+body.mg-play .mg-controls .flipper-controls button{flex:1;min-width:0;height:46px;min-height:46px;max-width:none;font-size:16px;border:1px solid #6982a8;border-radius:11px;background:#233c62;box-shadow:none;padding:6px}
+body.mg-play .mg-controls #pinball-launch{flex:1 0 100%;width:100%;max-width:none;min-height:44px;height:44px;border-radius:10px;padding:6px 12px;font-size:14px}
+body.mg-play .mg-controls .flipper-controls .is-pressed{background:#754d96}
+/* Blocks retains the preview, not decorative text or duplicate commands. */
+body.mg-play .game-area{flex-direction:row;gap:6px;align-items:center;justify-content:center}
+body.mg-play .board-container{flex:0 0 var(--board-width);width:var(--board-width)}
+body.mg-play .board-frame{box-sizing:border-box;width:100%;height:calc(var(--board-width)*2);aspect-ratio:1/2}
+body.mg-play .game-sidebar{width:58px;flex:0 0 58px;align-self:flex-start;margin-top:5px;gap:0}
+body.mg-play .next-panel{padding:5px 2px;min-width:0}
+body.mg-play .panel-caption{font-size:8px;letter-spacing:.03em}
+body.mg-play #next{width:52px;height:52px}
+body.mg-play .control-bar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;max-width:900px;width:100%;margin:0}
+body.mg-play .control-key{height:46px;min-height:46px;padding:3px;gap:2px;border-radius:10px}
+body.mg-play .control-key>span{font-size:22px}body.mg-play .control-key small{font-size:7px}
+/* Match-3 gets one full-size square, no permanent progress and instructions. */
+body.mg-play .board-section>.board-shell{flex:none;width:var(--mg-square);height:var(--mg-square);max-width:100%;max-height:100%;margin:0;aspect-ratio:1;box-sizing:border-box;padding:5px}
+/* Solitaire: maximum usable card table; longer runs scroll rather than clip. */
+body.mg-play .mg-shell{--card-h:calc(var(--card-w)*1.48)}
+body.mg-play .table{display:block;flex:1 1 0%;width:100%;height:auto;min-height:0;max-height:none;border-radius:11px;padding:8px;overflow:auto;overscroll-behavior:contain}
+body.mg-play .piles-top,body.mg-play .tableau{display:grid;grid-template-columns:repeat(7,var(--card-w));justify-content:space-between;gap:4px}
+body.mg-play .tableau{min-height:0;margin-top:16px;align-items:start}
+body.mg-play .tableau-col{min-height:var(--card-h)}
+body.mg-play .card .corner{font-size:clamp(10px,calc(var(--card-w)*.27),26px);padding:2px 1px 0 3px}
+body.mg-play .card .large-suit{font-size:clamp(20px,calc(var(--card-w)*.58),70px)}
+body.mg-play .card .lower{font-size:clamp(10px,calc(var(--card-w)*.25),25px)}
+body.mg-play .card.back{font-size:clamp(20px,calc(var(--card-w)*.48),56px)}
+/* Modal utility drawer: real existing controls keep their handlers and state. */
+body.mg-play .mg-menu{box-sizing:border-box;padding:16px;border:1px solid #526a87;border-radius:18px;background:#102239;color:#e9f5ff;width:min(440px,calc(100% - 24px));max-height:calc(100dvh - 32px);overflow:auto;font:14px/1.5 system-ui,sans-serif}
+body.mg-play .mg-menu::backdrop{background:#020817b8;backdrop-filter:blur(3px)}
+body.mg-play .mg-menu-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+body.mg-play .mg-menu h2{font-size:20px;margin:0}
+body.mg-play .mg-menu button{font:700 14px/1.3 system-ui,sans-serif;min-height:44px;cursor:pointer;touch-action:manipulation}
+body.mg-play .mg-menu .mg-close{width:44px;flex:none;border:1px solid #56708b;border-radius:10px;background:#1b3553;color:#fff}
+body.mg-play .mg-menu-actions{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+body.mg-play .mg-menu-actions .mg-menu-action{box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:100%;max-width:none;min-height:44px;padding:10px;border:1px solid #4e6b88;border-radius:10px;background:#203d5b;color:#eaf6ff;font-size:14px}
+body.mg-play .mg-menu-actions .mg-menu-action:disabled{opacity:.4;cursor:default}
+body.mg-play .mg-menu .mg-all-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:14px 0}
+body.mg-play .mg-menu .mg-all-stats>div{min-height:0;padding:8px;text-align:center;border:1px solid #3a526b;border-radius:9px;background:#152c46}
+body.mg-play .mg-menu .mg-all-stats span{display:block;font-size:10px;color:#a9bfd5}
+body.mg-play .mg-menu .mg-all-stats strong{display:block;font-size:19px;color:#eaf6ff}
+body.mg-play .mg-menu .mg-rules{display:block;width:auto;margin:14px 0;padding:12px;color:#b8cde0;font-size:13px;border:1px solid #3a5672;border-radius:10px;background:#18314d}
+body.mg-play .mg-rules .help-icon,body.mg-play .mg-rules .instruction-icon{display:none}
+body.mg-play .mg-menu .mg-rules p{font-size:13px;line-height:1.6;margin:0;color:inherit}
+body.mg-play .mg-menu .mg-resume{width:100%;min-height:46px;background:#56e3cb;color:#092b38;border:0;border-radius:11px;margin-top:8px}
+body.mg-play .mg-menu .mg-cabinet-info{display:none}
+body.mg-play .mg-menu .mg-detail{padding:10px 0;margin:8px 0}
+body.mg-play .mg-menu .mg-menu-action#sound-button{width:100%;font-size:20px}
+@media(max-width:359px){.mg-bar{gap:4px;padding:0 2px}.mg-bar .mg-name{font-size:12px}.mg-bar .mg-hud{gap:6px}.mg-hud-item b{font-size:12px}.mg-hud-item small{font-size:7px}}
+@media(orientation:landscape) and (max-height:500px) and (min-width:600px){
+ body.mg-play .mg-shell{display:grid;grid-template-columns:minmax(0,1fr) 180px;grid-template-rows:minmax(0,1fr);gap:10px;padding:6px}
+ body.mg-play .mg-stage{grid-column:1;grid-row:1;height:100%;width:100%;align-self:stretch}
+ body.mg-play .mg-controls{grid-column:2;grid-row:1;align-self:center;display:flex;flex-direction:column;width:100%;max-width:none;gap:8px}
+ body.mg-play .mg-controls>button{width:100%;max-width:none;flex:none}
+ body.mg-play .mg-controls .flipper-controls{flex-direction:column;gap:8px}
+ body.mg-play .mg-controls .flipper-controls button{flex:none}
+ body.mg-play .mg-controls #pinball-launch{flex:none;height:44px}
+ body.mg-play .number-pad{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+ body.mg-play .snake-pad{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,44px)}
+ body.mg-play .control-bar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(3,46px)}
+ body.mg-play .control-bar .drop-key{grid-column:span 2}
+ body.mg-play .mg-shell:has(.mg-controls[hidden]){display:flex}
+ body.mg-play[data-game="match3"] .mg-shell,body.mg-play[data-game="solitaire"] .mg-shell{display:flex}
+ body.mg-play[data-embedded="false"] .mg-shell{grid-template-rows:48px minmax(0,1fr)}
+ body.mg-play[data-embedded="false"] .mg-bar{grid-column:1/-1;grid-row:1;width:100%;margin:0}
+ body.mg-play[data-embedded="false"] .mg-stage,body.mg-play[data-embedded="false"] .mg-controls{grid-row:2}
+}
+@media(prefers-reduced-motion:reduce){body.mg-play .mg-toast{transition:none}}
