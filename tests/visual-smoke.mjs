@@ -71,6 +71,52 @@ for (const [name, viewport] of [
         assert.ok(controls.launcherBottom <= controls.height, 'Pinball launcher must fit without scrolling: ' + JSON.stringify(controls));
       }
       await page.screenshot({path:shots+'/'+id+'.png',fullPage:false});
+
+      if (id === 'solitaire') {
+        // A face-up partial run, not just the top card, must visibly follow the pointer.
+        await frame.evaluate(async () => {
+          const {validGame} = await import('./engine.js');
+          const used = [12, 24, 36, 22, 38]; // K♠ Q♥ J♣ 10♥ | K♣
+          const game = {
+            stock:Array.from({length:52},(_,i)=>i).filter(card=>!used.includes(card)),
+            waste:[],foundations:Array.from({length:4},()=>[]),
+            tableau:Array.from({length:7},()=>[]),
+            score:0,moves:0,won:false
+          };
+          game.tableau[0]=[12,24,36,22].map(card=>({id:card,up:true}));
+          game.tableau[1]=[{id:38,up:true}];
+          if(!validGame(game)) throw new Error('Invalid Klondike drag fixture');
+          localStorage.setItem('mygames-solitaire-state-v1',JSON.stringify({game,past:[]}));
+        });
+        await frame.goto(origin+'/solitaire/',{waitUntil:'domcontentloaded'});
+        await frame.waitForSelector('.tableau-col[data-column="0"] .card[data-index="1"]');
+        const fromBox = await frame.locator('.tableau-col[data-column="0"] .card[data-index="1"]').boundingBox();
+        const toBox = await frame.locator('.tableau-col[data-column="1"] .card[data-index="0"]').boundingBox();
+        assert.ok(fromBox && toBox,'Klondike drag target cards exist');
+        const originPoint = {x:fromBox.x+fromBox.width*.5,y:fromBox.y+6};
+        const targetPoint = {x:toBox.x+toBox.width*.5,y:toBox.y+12};
+        // Card index 1 is partially overlapped. The exposed top strip must be hittable.
+        const hit = await frame.evaluate(([x,y]) =>
+          document.elementFromPoint(x,y)?.closest('[data-source]')?.dataset.index ?? null,
+          [fromBox.width*.5+fromBox.x-(await frame.frameElement()).boundingBox().then(b=>b.x),
+           originPoint.y-(await frame.frameElement()).boundingBox().then(b=>b.y)]
+        );
+        // A fragment can have its own coordinates in an iframe; the drag itself is authoritative.
+        await page.mouse.move(originPoint.x,originPoint.y);
+        await page.mouse.down();
+        await page.mouse.move(originPoint.x+12,originPoint.y+30,{steps:9});
+        assert.equal(await frame.locator('.motion-clone').count(),3,'Three-card face-up run follows the pointer');
+        await page.screenshot({path:shots+'/solitaire-drag.png',fullPage:false});
+        await page.mouse.move(targetPoint.x,targetPoint.y,{steps:10});
+        await page.mouse.up();
+        await frame.waitForTimeout(430);
+        const saved = await frame.evaluate(() => JSON.parse(localStorage.getItem('mygames-solitaire-state-v1')).game);
+        assert.equal(saved.moves,1,'Dragging a legal run completes one move');
+        assert.deepEqual(saved.tableau[1].map(card=>card.id),[38,24,36,22],'Moving the upper face-up card carries the whole run');
+        assert.deepEqual(saved.tableau[0].map(card=>card.id),[12],'Original column retains only the lower King');
+        assert.equal(await frame.locator('.motion-clone').count(),0,'Card animation completes and removes previews');
+      }
+
       const gameOverflow=await frame.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
       assert.ok(gameOverflow<=3,id+' has horizontal overflow '+gameOverflow);
       await page.locator('#back-to-games').click();
