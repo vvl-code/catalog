@@ -84,3 +84,13 @@
  .number-pad{gap:2px}
  .controls{gap:4px}
 }
+
+/* Pinball's canvas and flipper overlay must share exactly the same width. */
+.pinball-mode .pinball-wrapper{
+ width:min(100%,clamp(180px,calc((100dvh - 245px)*.63),300px));
+ max-height:none;aspect-ratio:320/500
+}
+.pinball-mode .pinball-wrapper .pinball-stage{
+ width:100%;height:100%;aspect-ratio:auto;max-height:none
+}
+.pinball-mode .flipper-controls{width:auto}
