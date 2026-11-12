@@ -55,3 +55,22 @@ footer{margin-top:auto;text-align:center;color:#7daa9a;font-size:9px;letter-spac
  .controls button{font-size:16px}
  .controls button span{font-size:8px}
 }
+
+/* Landscape solitaire: full card tableau on the right, utilities to the left. */
+@media (orientation:landscape) and (max-height:500px) and (min-width:650px){
+ :root{--card-w:min(70px,calc((64vw - 30px)/7))}
+ .shell{max-width:none;width:100%;height:100dvh;min-height:0;
+  display:grid;grid-template-columns:minmax(0,1fr) min(64vw,610px);
+  grid-template-rows:auto auto auto auto 1fr;gap:6px 10px;
+  padding:6px 10px;overflow:visible}
+ .top{grid-column:1;grid-row:1}
+ .metrics{grid-column:1;grid-row:2}
+ .controls{grid-column:1;grid-row:3}
+ .status{grid-column:1;grid-row:4;text-align:left}
+ .instructions{grid-column:1;grid-row:5;align-self:start}
+ .table{grid-column:2;grid-row:1/span 5;min-height:0;height:calc(100dvh - 12px);
+  padding:7px 5px;overflow-y:auto;overflow-x:hidden}
+ .tableau{min-height:130px}
+ .separator{margin:10px 2px 6px}
+ footer{display:none}
+}
