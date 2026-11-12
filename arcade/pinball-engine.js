@@ -191,6 +191,9 @@ export class PinballEngine {
       p.vy=clamp(p.vy+.18*step,-19,15);
       p.x+=p.vx*step;p.y+=p.vy*step;
       p.vx*=Math.pow(.999,step);
+      if(!Number.isFinite(p.x)||!Number.isFinite(p.y)||!Number.isFinite(p.vx)||!Number.isFinite(p.vy)){
+        this.loseBall();break;
+      }
 
       // A drain must be reachable from all lower lanes. Never bounce a ball
       // indefinitely below the flipper pivots.
