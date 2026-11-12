@@ -9,8 +9,8 @@
 .card{position:absolute;top:0;left:0;width:100%;height:var(--card-h);padding:0;border:1px solid #c6d4d6;border-radius:6px;background:#f1f5f7;color:#172838;display:flex;flex-direction:column;align-items:center;justify-content:space-between;box-shadow:0 2px 3px #001b1470;touch-action:none;user-select:none;-webkit-user-select:none;overflow:hidden}
 .card.red{color:#bf2642}.card .corner{display:flex;align-items:flex-start;gap:1px;font-size:clamp(9px,2.9vw,14px);font-weight:900;line-height:1.1;width:100%;padding:2px 1px 0 3px}.card .large-suit{font-size:clamp(18px,5.2vw,34px);line-height:1.2;margin:auto}.card .lower{transform:rotate(180deg);font-size:clamp(9px,2.5vw,14px);font-weight:900;align-self:flex-end;padding:0 3px 2px}
 .card.back{background:repeating-linear-gradient(45deg,#205e88 0 5px,#18456d 5px 10px);border:3px solid #e9f4fa;outline:1px solid #174c69;outline-offset:-6px;color:#d5eafa;font-size:clamp(21px,5vw,34px);display:grid;place-items:center;text-shadow:0 2px 3px #13375d}
-.card.selected{outline:3px solid #fbdc6c;outline-offset:1px;z-index:1000!important;box-shadow:0 0 12px #fbdc6cb0}
-.card.hint{outline:3px solid #64f7cf;outline-offset:1px;z-index:1000!important}
+.card.selected{outline:3px solid #fbdc6c;outline-offset:1px;box-shadow:0 0 12px #fbdc6cb0}
+.card.hint{outline:3px solid #64f7cf;outline-offset:1px}
 .card:active{filter:brightness(.95)}
 .card-label{position:absolute;top:3px;right:3px;color:#ebfafc;background:#122a4b;border-radius:3px;padding:1px 4px;font-size:9px}
 .separator{display:flex;justify-content:space-between;margin:23px 2px 13px;color:#8dc6b2;font-size:9px;font-weight:800;letter-spacing:.1em}
@@ -29,7 +29,7 @@ footer{margin-top:auto;text-align:center;color:#7daa9a;font-size:9px;letter-spac
 
 /* A face-up card can be dragged with the entire ordered run beneath it.
    Presentation clones follow the touch; only engine.js decides legal drops. */
-.card.run-selected{outline:2px solid #f7de86;outline-offset:-1px;box-shadow:0 0 10px #ffe19b7a;z-index:990!important}
+.card.run-selected{outline:2px solid #f7de86;outline-offset:-1px;box-shadow:0 0 10px #ffe19b7a}
 .card.motion-clone{position:fixed!important;touch-action:none;pointer-events:none!important;z-index:2000;will-change:transform;box-shadow:0 10px 25px #001c18bb,0 0 8px #a9fce677}
 .tableau-col:has(.card.selected){border-color:#72eeca66}
 @media(prefers-reduced-motion:reduce){.card.motion-clone{transition:none;animation:none}}
