@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#103e37">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Косынка — классический пасьянс My Games">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'self'">
+  <title>Косынка — My Games</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="top"><div class="identity"><div class="mark">♠</div><div><h1>КОСЫНКА<span>.</span></h1><p>MY GAMES / ПАСЬЯНС</p></div></div><button class="restart" id="restart" title="Новая игра" aria-label="Новая игра">↻</button></header>
+    <section class="metrics">
+      <div><span>ХОДЫ</span><strong id="moves">0</strong></div>
+      <div><span>ОЧКИ</span><strong id="score">0</strong></div>
+      <div><span>В ДОМИКАХ</span><strong id="placed">0/52</strong></div>
+      <div><span>ПОБЕДЫ</span><strong id="wins">0</strong></div>
+    </section>
+    <section class="table" aria-label="Игровое поле">
+      <div class="piles-top">
+        <button id="stock" class="stock pile" aria-label="Взять карту из колоды" type="button"></button>
+        <div id="waste" class="pile waste" aria-label="Сброс"></div>
+        <div class="space" aria-hidden="true"></div>
+        <div class="foundation pile" data-dest="foundation" data-suit="0" aria-label="Домик пики"></div>
+        <div class="foundation pile" data-dest="foundation" data-suit="1" aria-label="Домик черви"></div>
+        <div class="foundation pile" data-dest="foundation" data-suit="2" aria-label="Домик трефы"></div>
+        <div class="foundation pile" data-dest="foundation" data-suit="3" aria-label="Домик бубны"></div>
+      </div>
+      <div class="separator"><span>РАСКЛАДКА</span><span>1 КАРТА</span></div>
+      <div id="tableau" class="tableau" aria-label="Семь столбцов пасьянса"></div>
+    </section>
+    <div class="controls"><button id="undo" type="button">↶ <span>ОТМЕНИТЬ</span></button><button id="auto" type="button">↥ <span>В ДОМИК</span></button><button id="hint" type="button">✦ <span>ПОДСКАЗКА</span></button></div>
+    <p id="status" role="status" aria-live="polite" class="status">Перетаскивай карты или выбери карту и место назначения.</p>
+    <div class="instructions">Чёрная на красную, красная на чёрную — по убыванию. Тузы начинают домики. На пустое место можно положить только короля.</div>
+    <div id="victory" class="victory" hidden><div>🏆</div><h2>Пасьянс сошёлся!</h2><p>Все 52 карты в домиках.</p><button id="again" class="win-button" type="button">НОВАЯ ПАРТИЯ</button></div>
+    <footer>MY GAMES · КЛАССИЧЕСКИЕ ИГРЫ</footer>
+  </main>
+</body>
+</html>

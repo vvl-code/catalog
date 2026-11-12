@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#10192b">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Три в ряд — бесплатная головоломка My Games">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'self'">
+  <title>Три в ряд — My Games</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="top">
+      <div class="identity"><span class="sparkle" aria-hidden="true">✦</span><div><h1>ТРИ В РЯД<span>.</span></h1><p>MY GAMES / ГОЛОВОЛОМКА</p></div></div>
+      <button id="restart" class="icon-button" type="button" aria-label="Начать новую игру" title="Новая игра">↻</button>
+    </header>
+    <section class="metrics" aria-label="Статистика">
+      <div><span>ОЧКИ</span><strong id="score">0</strong></div>
+      <div><span>ХОДЫ</span><strong id="moves">30</strong></div>
+      <div><span>УРОВЕНЬ</span><strong id="level">1</strong></div>
+      <div><span>РЕКОРД</span><strong id="best">0</strong></div>
+    </section>
+    <section class="board-section">
+      <div class="board-shell">
+        <div id="board" class="board" role="group" aria-label="Поле 8 на 8; соберите три одинаковых кристалла в ряд"></div>
+        <div id="finish" class="overlay" hidden><div class="finish-mark">✦</div><h2>Ходы закончились</h2><p id="finish-score"></p><button id="again" class="primary" type="button">НОВАЯ ИГРА</button></div>
+      </div>
+      <div class="progress-area"><div class="progress-label"><span>ДО СЛЕДУЮЩЕГО УРОВНЯ</span><strong id="next-label">1200</strong></div><div class="progress-rail"><div id="progress" class="progress-fill"></div></div></div>
+    </section>
+    <p id="status" class="status" role="status" aria-live="polite">Меняй соседние кристаллы местами и собирай цепочки.</p>
+    <section class="instructions">
+      <div class="instruction-icon">↔</div><p><strong>КАК ИГРАТЬ</strong><br>Проведи по кристаллу или выбери два соседних. Три и больше одного цвета исчезают. Каскады дают больше очков!</p>
+    </section>
+    <footer>MY GAMES · БЕЗ РЕКЛАМЫ</footer>
+  </main>
+</body>
+</html>
