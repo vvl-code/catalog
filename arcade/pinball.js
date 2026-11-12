@@ -1,4 +1,5 @@
 // Original space-themed pinball: custom table, graphics and physics.
+import {drawPlayfield} from './pinball-art.js';
 export function mountPinball({mount,stats,message,controls}) {
   const canvas=document.createElement('canvas');
   canvas.width=320;canvas.height=500;canvas.className='pinball-stage';
@@ -54,6 +55,7 @@ export function mountPinball({mount,stats,message,controls}) {
   function bump(b) {
     const dx=ball.x-b.x,dy=ball.y-b.y,dist=Math.hypot(dx,dy);
     if(dist>=b.r+7||dist<.001)return;
+    b.hitAt=performance.now();
     const nx=dx/dist,ny=dy/dist;
     ball.x=b.x+nx*(b.r+7);ball.y=b.y+ny*(b.r+7);
     const dot=ball.vx*nx+ball.vy*ny;
@@ -102,26 +104,7 @@ export function mountPinball({mount,stats,message,controls}) {
   }
   const stars=Array.from({length:50},(_,i)=>({x:(i*73+37)%W,y:(i*109+27)%H,r:i%5===0?1.4:.65}));
   function draw(){
-    const grad=ctx.createLinearGradient(0,0,0,H);
-    grad.addColorStop(0,'#0c1d44');grad.addColorStop(.65,'#181944');grad.addColorStop(1,'#07142a');
-    ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
-    for(const s of stars){ctx.fillStyle='#8bd6ff99';ctx.fillRect(s.x,s.y,s.r,s.r);}
-    ctx.strokeStyle='#58a9eb';ctx.lineWidth=5;ctx.beginPath();
-    ctx.moveTo(19,456);ctx.lineTo(19,35);ctx.quadraticCurveTo(160,-5,301,35);ctx.lineTo(301,460);ctx.stroke();
-    ctx.strokeStyle='#7e6fff66';ctx.lineWidth=2;
-    for(let j=0;j<4;j++){ctx.beginPath();ctx.ellipse(150,220,65+j*28,125+j*30,0,.2,Math.PI*1.8);ctx.stroke();}
-    ctx.font='bold 17px system-ui';ctx.fillStyle='#8fe8ff';ctx.textAlign='center';ctx.fillText('N E B U L A',160,63);
-    ctx.font='9px system-ui';ctx.fillStyle='#bbb4ff';ctx.fillText('ORBITAL PINBALL',160,77);
-    for(const b of bumpers){circle(b.x,b.y,b.r+6,'#212d64','#a0f8f9');circle(b.x,b.y,b.r,b.c,'#fff5');circle(b.x,b.y,7,'#ffffffac','transparent');}
-    ctx.strokeStyle='#8fcbff';ctx.lineWidth=7;ctx.lineCap='round';
-    ctx.beginPath();ctx.moveTo(35,357);ctx.lineTo(85,409);ctx.moveTo(284,357);ctx.lineTo(233,409);ctx.stroke();
-    ctx.strokeStyle='#f0cc73';ctx.lineWidth=11;
-    ctx.beginPath();ctx.moveTo(91,436);ctx.lineTo(leftDown?154:144,leftDown?415:450);
-    ctx.moveTo(228,436);ctx.lineTo(rightDown?166:176,rightDown?415:450);ctx.stroke();
-    circle(91,436,7,'#a5f7ea');circle(228,436,7,'#a5f7ea');
-    if(ball.active){const glow=ctx.createRadialGradient(ball.x,ball.y,1,ball.x,ball.y,17);glow.addColorStop(0,'#fff');glow.addColorStop(.4,'#71f4ffb0');glow.addColorStop(1,'#59eefa00');circle(ball.x,ball.y,16,glow,'transparent');circle(ball.x,ball.y,7,'#f4f7fa','#a3e8ed');}
-    else if(balls>0)circle(291,455,7,'#f5fbfd','#a3e8ed');
-    ctx.fillStyle='#77a4bc';ctx.font='bold 11px system-ui';ctx.fillText('BALLS '+balls,160,482);
+    drawPlayfield(ctx,{ball,balls,leftDown,rightDown,bumpers,score,now:performance.now()});
   }
   function frame(now){
     if(!running)return;
