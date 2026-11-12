@@ -1,0 +1,184 @@
+/* Mini Games — original retro pinball cabinet inspired by late-1990s space tables.
+   No external graphics, copyrighted bitmaps or fonts are embedded. */
+.pinball-layout{display:flex;justify-content:center;align-items:center;width:100%;min-width:0}
+.pinball-layout .pinball-wrapper{flex:none}
+.pinball-layout .pinball-stage{display:block;image-rendering:auto}
+.pinball-scoreboard{display:none}
+.pinball-mode .pinball-launch:disabled{
+  opacity:.65;background:#182e4c;border:1px solid #344a6c;
+  color:#a8c2d6;cursor:not-allowed;
+}
+.pinball-mode .pinball-nudge{min-height:38px;touch-action:manipulation}
+.pinball-mode .flipper-controls .is-pressed{
+  background:#8c3775df;border-color:#eab5f1;box-shadow:0 0 16px #d46ab755;
+}
+@media(min-width:960px) and (min-height:620px){
+  .pinball-mode .game{
+    grid-column:2;
+    grid-row:1/-1;
+    display:flex;
+    min-width:0;
+    min-height:0;
+    justify-content:center;
+    align-items:center;
+    overflow:visible;
+  }
+  .pinball-mode .pinball-layout{
+    display:grid;grid-template-columns:minmax(0,1fr) clamp(190px,17.8vw,285px);
+    gap:clamp(10px,1.5vw,25px);
+    width:100%;height:100%;
+    max-width:1050px;
+    justify-items:center;
+    align-items:center;
+    min-width:0;
+  }
+  .pinball-mode .pinball-layout .pinball-wrapper{
+    width:min(100%,calc((100dvh - 118px)*.64),540px);
+    max-width:100%;
+    max-height:none;
+    height:auto;
+    aspect-ratio:320/500;
+    margin:0 auto;
+    position:relative;
+  }
+  .pinball-mode .pinball-layout .pinball-stage{
+    width:100%;height:100%;max-height:none;
+    border-width:5px;
+    aspect-ratio:auto;
+    box-shadow:0 9px 35px #000a,0 0 0 3px #6d728c88;
+  }
+  /* Controls no longer conceal the lower ramps, drain or flippers. */
+  .pinball-mode .pinball-layout .flipper-controls{
+    position:absolute;left:0;right:0;bottom:-60px;
+    width:auto;display:flex;gap:10px;
+  }
+  .pinball-mode .pinball-layout .flipper-controls button{
+    min-height:49px;background:#1d335c;border:1px solid #7697ba;
+    border-radius:9px;box-shadow:inset 0 1px 1px #bad8e966;
+    font-size:clamp(11px,1vw,15px);
+  }
+  .pinball-mode .pinball-scoreboard{
+    width:100%;height:min(calc(100dvh - 116px),770px);
+    min-height:500px;
+    padding:9px;
+    display:flex;flex-direction:column;
+    gap:8px;
+    color:#d1c9fd;
+    border-radius:5px;
+    border:7px solid #646671;
+    outline:2px solid #181f32;
+    box-shadow:inset 0 1px 5px #c9cfdb,0 0 0 3px #292a40,0 12px 32px #030618;
+    background:linear-gradient(150deg,#5c5d70,#363a4f 32%,#45485e 62%,#23283c);
+  }
+  .pinball-scoreboard>.cabinet-head,
+  .pinball-scoreboard>.cabinet-digital,
+  .pinball-scoreboard>.cabinet-status,
+  .pinball-scoreboard>.cabinet-mission{
+    border:3px solid #8d90a4;
+    box-shadow:0 2px 5px #090b18,inset 0 1px 6px #080b16;
+    background:radial-gradient(ellipse at 50% 22%,#202047 0,#080c1b 70%);
+    flex:none;min-width:0;overflow:hidden;
+  }
+  .pinball-scoreboard .cabinet-head{
+    position:relative;display:flex;flex-direction:column;
+    align-items:center;justify-content:start;
+    height:34%;min-height:156px;
+    padding:10px 9px 4px;
+    overflow:hidden;
+    background:radial-gradient(ellipse at 75% 22%,#31264a 0,#050b1c 72%);
+  }
+  .cabinet-head::before{
+    content:"";
+    position:absolute;inset:0;pointer-events:none;
+    background-image:radial-gradient(circle,#adcdfb 0 1px,transparent 1.5px);
+    background-size:31px 37px;
+    opacity:.3;
+  }
+  .cabinet-head .cabinet-space{
+    align-self:center;
+    z-index:1;color:#b994e5;
+    line-height:1;font-family:Georgia,"Times New Roman",serif;
+    font-size:clamp(29px,2.65vw,48px);font-weight:900;
+    letter-spacing:-.07em;font-style:italic;
+    text-shadow:-2px 2px 0 #53366b,0 4px 8px #050116;
+    transform:rotate(-5deg);
+  }
+  .cabinet-head .cabinet-cadet{
+    z-index:1;color:#d6a7e9;font-size:clamp(12px,1.2vw,22px);
+    font-family:Georgia,serif;letter-spacing:.14em;font-weight:900;
+    margin-top:1px;transform:rotate(-4deg);
+    text-shadow:0 2px 7px #0b031c;
+  }
+  .cabinet-head .cabinet-ship{
+    display:block;position:absolute;top:30%;left:5%;
+    width:90%;height:58%;filter:drop-shadow(0 7px 5px #0008);
+  }
+  .cabinet-head .cabinet-ball{
+    z-index:1;position:absolute;right:6px;bottom:6px;
+    font:900 clamp(12px,1vw,18px) "Courier New",monospace;
+    color:#fd7468;letter-spacing:.12em;
+  }
+  .cabinet-head .cabinet-ball strong{
+    color:#b4a2ff;border:2px solid #603d90;
+    padding:1px 7px;background:#060717;
+  }
+  .cabinet-scoreboard,.cabinet-digital{font-family:"Courier New",Consolas,monospace}
+  .pinball-scoreboard .digital-label{
+    font-family:"Courier New",Consolas,monospace;
+    font-size:clamp(10px,.72vw,13px);
+    color:#aa99dc;font-weight:900;
+    letter-spacing:.07em;
+  }
+  .pinball-scoreboard .cabinet-digital{
+    min-height:85px;padding:7px 12px;
+    display:flex;flex-direction:column;gap:7px;
+  }
+  .cabinet-digital .digital-label{display:flex;justify-content:space-between}
+  .cabinet-digital strong{
+    display:block;text-align:right;
+    color:#bcaefc;text-shadow:0 0 9px #8c7dff7b;
+    font:900 clamp(23px,2vw,40px) "Courier New",Consolas,monospace;
+    font-variant-numeric:tabular-nums;
+    letter-spacing:.04em;
+  }
+  .pinball-scoreboard .cabinet-status{
+    min-height:96px;padding:9px 11px;display:flex;flex-direction:column;gap:10px;
+  }
+  .pinball-scoreboard .cabinet-status strong{
+    color:#bbb2ff;text-shadow:0 0 5px #7068e677;
+    font:900 clamp(13px,1.05vw,18px) "Courier New",monospace;
+    line-height:1.45;overflow-wrap:anywhere;
+  }
+  .pinball-scoreboard .cabinet-mission{
+    flex:1;min-height:103px;padding:10px 11px;display:flex;flex-direction:column;gap:13px;
+  }
+  .pinball-scoreboard .cabinet-mission>span:last-child{
+    color:#d3c6fe;font:bold clamp(11px,.85vw,14px) "Courier New",monospace;
+    line-height:1.5;
+  }
+  .mission-lamps{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px}
+  .mission-lamps i{
+    height:13px;border-radius:50%;background:#2c3552;
+    border:1px solid #59617d;box-shadow:inset 0 2px 4px #050815b7;
+  }
+  .mission-lamps i.lit{
+    background:radial-gradient(circle at 32% 28%,#e6ffff,#469cff 45%,#163d8a 90%);
+    box-shadow:0 0 7px #65b5fa;
+  }
+  .pinball-scoreboard .cabinet-footer{
+    flex:none;color:#b8b3db;
+    font:900 11px/1.7 "Courier New",monospace;
+    text-align:center;letter-spacing:.06em;
+    background:#292b43;
+    padding:7px;
+    border:1px solid #76768c;
+  }
+}
+/* Medium-size touchscreen and landscape phones retain accessible overlaid controls. */
+@media(max-width:959px), (max-height:619px){
+  .pinball-layout{display:flex;justify-content:center}
+  .pinball-scoreboard{display:none}
+  .pinball-mode .controls{flex-direction:row;flex-wrap:wrap;gap:6px}
+  .pinball-mode .pinball-launch{flex:1 0 100%}
+  .pinball-mode .pinball-nudge{flex:1;min-height:36px}
+}
