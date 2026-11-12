@@ -51,3 +51,36 @@
 .pinball-mode .flipper-controls button{min-height:45px;padding:8px 6px;font-size:13px}
 .pinball-mode .controls>button{width:min(100%,350px);padding:8px 12px;font-size:11px}
 .pinball-mode .help,.pinball-mode footer{display:none}
+
+/* Responsive game surfaces. Keep square boards square and scroll instead of
+   cutting off controls when Telegram reduces the available WebView height. */
+.shell{width:100%;min-width:0}
+.game{max-width:100%;min-width:0}
+.game .grid,.game .number-grid,.game .sudoku-grid{
+ width:min(100%,max(245px,calc(100dvh - 285px)),520px);
+ max-width:100%;aspect-ratio:1
+}
+.game .snake-stage{width:min(100%,max(230px,calc(100dvh - 310px)),410px);max-width:100%}
+.game .word-board{max-width:100%}
+.controls{width:100%}
+@media(max-height:710px){
+ .shell{gap:7px;padding-top:7px;padding-bottom:8px}
+ .top .logo{height:36px;width:36px}
+ .identity h1{font-size:16px}
+ .stats .stat{padding:6px 3px}
+ .stats .stat strong{font-size:16px}
+ .game{margin:0 auto;flex:0 0 auto}
+ .game .grid,.game .number-grid,.game .sudoku-grid{
+   width:min(100%,max(230px,calc(100dvh - 260px)),480px)
+ }
+ .help{padding:8px}
+ .controls button{min-height:42px}
+}
+@media(max-width:350px){
+ .shell{padding-left:8px;padding-right:8px}
+ .grid{gap:2px}
+ .chess-grid .square{font-size:clamp(24px,7vw,37px)}
+ .checker-grid .square{font-size:clamp(19px,6vw,31px)}
+ .number-pad{gap:2px}
+ .controls{gap:4px}
+}
