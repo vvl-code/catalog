@@ -146,7 +146,7 @@ function flipper(ctx,px,py,tx,ty,power) {
   disc(ctx,px,py,8,gradient(ctx,px,py,8,'#b3b5e0','#563959'),'#ffceee',1.3);
   ctx.restore();
 }
-export function drawPlayfield(ctx,{ball,balls,leftDown,rightDown,bumpers,score,now}) {
+export function drawPlayfield(ctx,{ball,balls,leftDown,rightDown,bumpers,score,now,phase='ready',dropTargets=[false,false,false],reentry=[false,false,false],kickerLights=[false,false],attackHits=0,bonusMultiplier=1}) {
   const W=320,H=500;
   ctx.save();
   const outer=ctx.createLinearGradient(0,0,W,H);
@@ -171,20 +171,67 @@ export function drawPlayfield(ctx,{ball,balls,leftDown,rightDown,bumpers,score,n
   tube(ctx,[[24,230],[24,70],[39,33],[104,19],[218,19],[262,40],[276,80]],'#a63a48',8,'#edb1a2');
   tube(ctx,[[35,110],[52,51],[101,38],[198,38],[244,58],[266,104]],'#93794f',5,'#fff0ac');
   for(let i=0;i<9;i++)light(ctx,66+i*23,42+i%2*2,i%2===0,'#ffd66e',3);
-  // Top banks, with rectangular drop targets.
-  for(let i=0;i<4;i++){
-    const x=129+i*25;
+  // Three independent yellow drop targets; physical collisions and lamps match.
+  for(let i=0;i<3;i++){
+    const x=129+i*22,hit=dropTargets[i];
     capsule(ctx,x,65,16,29,3);
-    ctx.fillStyle=i%2===0?'#dfb65a':'#dd5964';ctx.fill();
-    ctx.strokeStyle='#faead5';ctx.lineWidth=1.2;ctx.stroke();
-    light(ctx,x+8,60,i<3,'#ffde72',3);
+    const metal=ctx.createLinearGradient(x,65,x+16,94);
+    metal.addColorStop(0,hit?'#614b55':'#fff1a6');
+    metal.addColorStop(.55,hit?'#783647':'#eab762');
+    metal.addColorStop(1,hit?'#371e30':'#875647');
+    ctx.fillStyle=metal;ctx.fill();
+    ctx.strokeStyle='#f8ecdb';ctx.lineWidth=1.2;ctx.stroke();
+    capsule(ctx,x+4,68,8,21,2);ctx.strokeStyle='#ad8c62';ctx.lineWidth=1;ctx.stroke();
+    light(ctx,x+8,60,!hit,'#ffe36b',3);
   }
-  ctx.save();ctx.font='bold 9px monospace';ctx.textAlign='center';ctx.fillStyle='#a9c9ec';
-  ctx.fillText('MISSIONS',174,110);
+  ctx.save();ctx.font='bold 9px monospace';ctx.textAlign='center';ctx.fillStyle='#c9cbff';
+  ctx.fillText('MISSION TARGETS',168,108);
   ctx.restore();
+  // Three re-entry lanes with round amber light indicators.
+  for(let i=0;i<3;i++){
+    const lx=96+i*57;
+    light(ctx,lx,39,reentry[i],reentry[i]?'#7bf9a7':'#ffbd54',4);
+    tube(ctx,[[lx-21,25],[lx-21,57]],'#5d455c',3,'#cec6d1');
+  }
+  ctx.fillStyle='#b7a0db';ctx.textAlign='center';ctx.font='bold 7px monospace';
+  ctx.fillText('RE-ENTRY',165,22);
   // Raised warp-ramp on the left and arrow guides on the right.
   ramp(ctx);
   launcher(ctx);
+  // Mechanical details visible in the classic Windows space-table silhouette:
+  // fuel-lamp bank, a black-hole kickout, three-mission bank and wormhole.
+  ctx.save();
+  capsule(ctx,45,101,22,76,7);ctx.fillStyle='#191b3e';ctx.fill();
+  ctx.strokeStyle='#9c91ab';ctx.lineWidth=2;ctx.stroke();
+  for(let i=0;i<5;i++)light(ctx,56,111+i*13,(i+Math.floor(now/380))%4<3,'#d6ff65',2.8);
+  ctx.fillStyle='#d2a8e8';ctx.font='bold 7px monospace';ctx.save();
+  ctx.translate(41,134);ctx.rotate(-Math.PI/2);ctx.fillText('FUEL',0,0);ctx.restore();
+
+  const hole=gradient(ctx,236,179,22,'#465078','#0b0a23');
+  disc(ctx,236,179,22,hole,'#c98e95',3.7);
+  disc(ctx,236,179,14,'#050713','#84829d',2);
+  ctx.strokeStyle='#ad8ba7';ctx.lineWidth=3;
+  for(let a=0;a<5;a++){ctx.beginPath();ctx.arc(236,179,18,a*Math.PI*.38,(a+.55)*Math.PI*.38);ctx.stroke();}
+  light(ctx,234,159,attackHits>=4,'#facc63',3);
+  ctx.font='bold 8px monospace';ctx.textAlign='center';ctx.fillStyle='#c6d3f3';
+  ctx.fillText('HYPER',236,209);
+
+  // Three white-rimmed spot targets on the right-hand mission bank.
+  for(let i=0;i<3;i++){
+    const y=220+i*23;
+    capsule(ctx,241,y,11,13,2);
+    ctx.fillStyle=i%2===0?'#f2edb2':'#e9cb88';ctx.fill();
+    ctx.strokeStyle='#b9565c';ctx.lineWidth=2;ctx.stroke();
+    light(ctx,260,y+6,(attackHits+i)%3===0,'#ffcf65',2.7);
+  }
+
+  // Purple wormhole with red inset and orbit registration markers.
+  disc(ctx,58,260,14,gradient(ctx,58,260,15,'#b1adfb','#5a417d'),'#f7b5d9',2);
+  disc(ctx,58,260,8,'#241a47','#eed8fc',1.6);
+  disc(ctx,58,260,3,'#fe5371');
+  for(let i=0;i<5;i++)light(ctx,46+i*7,283,(i+Math.floor(now/250))%2===0,'#7ae9ff',2.6);
+  ctx.fillStyle='#aeb4eb';ctx.font='bold 7px monospace';ctx.fillText('WORMHOLE',60,295);
+  ctx.restore();
   tube(ctx,[[235,56],[258,87],[269,132],[263,187]],'#a23a59',6,'#f4c5b3');
   for(let i=0;i<6;i++)light(ctx,247+i%3*7,87+i*20,i%2===0,'#ffd864',3);
   for(const bumper of bumpers){
@@ -203,6 +250,16 @@ export function drawPlayfield(ctx,{ball,balls,leftDown,rightDown,bumpers,score,n
   ctx.shadowBlur=0;ctx.fillStyle='#ffe3fd';ctx.font='bold 9px monospace';ctx.textAlign='center';ctx.fillText('WARP',0,4);ctx.restore();
   // Large illuminated reactor ring near the mid/lower part of the board.
   reactor(ctx,now,score);
+  // Raised pink-purple bottom plates, a distinctive Space Cadet silhouette.
+  ctx.save();
+  path(ctx,[[120,459],[131,422],[144,455],[152,414],[160,459],[176,413],[189,459]],true);
+  const purple=ctx.createLinearGradient(120,414,170,461);
+  purple.addColorStop(0,'#f3b3e6');purple.addColorStop(.5,'#9055a8');purple.addColorStop(1,'#3a2f67');
+  ctx.fillStyle=purple;ctx.shadowColor='#ca8df1';ctx.shadowBlur=9;ctx.fill();
+  ctx.strokeStyle='#eab7ec';ctx.lineWidth=1.3;ctx.stroke();
+  ctx.restore();
+  // Active outlane kickers have practical gameplay effects.
+  for(let i=0;i<2;i++)light(ctx,i===0?47:270,460,!!kickerLights[i],'#fdca6b',4.2);
   // Mechanical triangular kickbacks above the flippers.
   slingshot(ctx,'left');slingshot(ctx,'right');
   arrow(ctx,49,321,'#e8e761',-.2,.65);
@@ -220,13 +277,15 @@ export function drawPlayfield(ctx,{ball,balls,leftDown,rightDown,bumpers,score,n
   ctx.save();ctx.textAlign='center';
   ctx.font='bold 10px monospace';ctx.fillStyle='#e2af77';
   ctx.fillText('STELLAR',158,485);ctx.restore();
+  ctx.font='bold 7px monospace';ctx.textAlign='center';ctx.fillStyle='#a3b7d6';
+  ctx.fillText('×'+bonusMultiplier+' BONUS',157,472);
   // Chrome ball and launch lane ready state.
   if(ball.active){
     ctx.save();ctx.shadowBlur=12;ctx.shadowColor='#8dceff';
     disc(ctx,ball.x+2,ball.y+3,7,'#050b25');
     disc(ctx,ball.x,ball.y,7,gradient(ctx,ball.x,ball.y,8,'#ffffff','#5b789d'),'#f2fdff',1);
     ctx.shadowBlur=0;disc(ctx,ball.x-2,ball.y-2,2,'#ffffff');ctx.restore();
-  }else if(balls>0){
+  }else if(balls>0&&phase==='ready'){
     disc(ctx,294,455,7,gradient(ctx,294,455,8,'#ffffff','#6e8fac'),'#efffff',1);
   }
   ctx.restore();
