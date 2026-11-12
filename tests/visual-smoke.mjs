@@ -77,7 +77,37 @@ for (const [name, viewport] of [
       await page.locator('#catalog-view').waitFor({state:'visible'});
       assert.equal(await page.locator('#player-view').isVisible(),false,id+' returned on first tap');
     }
+    // Validate icons used for iPhone installation; SVG card art alone isn't sufficient.
+    const icons = await page.evaluate(async () => {
+      const list = ['./icons/icon-192.png','./icons/icon-512.png','./icons/apple-touch-icon.png'];
+      return Promise.all(list.map(async src => {
+        const img = new Image();
+        img.src = src;
+        try { await img.decode(); return {src,ok:true,width:img.naturalWidth,height:img.naturalHeight}; }
+        catch (error) { return {src,ok:false,error:String(error)}; }
+      }));
+    });
+    assert.equal(icons.every(icon => icon.ok && icon.width>0),true,'All PWA icons must decode: '+JSON.stringify(icons));
+
+    // The newly installed Mini Games PWA must launch more than one game offline.
+    await page.goto(origin+'/', {waitUntil:'load',timeout:20000});
+    await page.waitForFunction(() => document.querySelectorAll('.game-card.compact-card[data-game]').length === 12);
+    await page.evaluate(async () => { if (!('serviceWorker' in navigator)) throw new Error('No Service Worker API'); await navigator.serviceWorker.ready; });
+    await page.waitForFunction(() => navigator.serviceWorker.controller !== null, {timeout:15000});
+    await context.setOffline(true);
+    try {
+      await page.reload({waitUntil:'domcontentloaded',timeout:20000});
+      await page.waitForFunction(() => document.querySelectorAll('.game-card.compact-card[data-game]').length === 12);
+      for (const [game,selector] of [['blocks','#board'],['chess','#game .chess-grid']]) {
+        await page.locator('[data-game="'+game+'"]').click();
+        const frame=await (await page.$('#game-frame')).contentFrame();
+        await frame.waitForSelector(selector,{timeout:10000});
+        await page.locator('#back-to-games').click();
+        await page.locator('#catalog-view').waitFor({state:'visible'});
+      }
+    } finally { await context.setOffline(false); }
     assert.deepEqual(errors,[],'No uncaught JavaScript errors');
+
     console.log('PASS '+name+': 12 cards, icon, game launch, return, screenshots');
   } catch(err) {
     failures.push(name+': '+err.message);
