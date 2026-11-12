@@ -127,3 +127,21 @@ button:disabled { cursor: not-allowed; opacity: .4; }
  .game-sidebar{gap:5px}
  .control-key{min-height:44px}
 }
+
+/* The board and controls share <main>, not .app-shell. Place them in real grid columns. */
+@media (orientation:landscape) and (max-height:500px) and (min-width:600px){
+ :root{--board-width:min(165px,calc((100dvh - 68px)/2))}
+ .app-shell{display:block;max-width:none;height:100dvh;min-height:0;
+  width:100%;padding:5px 12px;overflow-y:auto}
+ .app-shell>.top-bar{height:32px;min-height:32px;margin-bottom:3px}
+ .app-shell>main{
+  display:grid;height:calc(100dvh - 43px);grid-template-columns:minmax(0,1fr) minmax(270px,44vw);
+  grid-template-rows:auto minmax(0,1fr) auto auto;gap:4px 10px;align-items:start
+ }
+ .app-shell main>.score-strip{grid-column:1;grid-row:1;margin:0}
+ .app-shell main>.game-area{grid-column:2;grid-row:1/span 4;margin:0;align-self:start}
+ .app-shell main>.control-bar{grid-column:1;grid-row:3;margin:0}
+ .app-shell main>.gesture-hint{grid-column:1;grid-row:4;margin:0}
+ .game-sidebar{gap:4px}
+ .control-key{min-height:44px}
+}
