@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {SIZE, COLORS, makeBoard, matches, hasMove, adjacent, swap, applyGravity, validSavedBoard} from '../match3/engine.js';
-import {SUITS,rank,rankName,suit,red,newGame,validGame,canMove,moveCards,dealStock,hint} from '../solitaire/engine.js';
+import {SUITS,rank,rankName,suit,red,newGame,validGame,selectionCards,canMove,moveCards,dealStock,hint} from '../solitaire/engine.js';
 
 test('Match-3: generated boards contain no initial matches and always have a playable move', () => {
   for (let i=0;i<250;i++) {
@@ -103,4 +103,31 @@ test('Klondike: rank/suit conversions and hints always refer to a legal move', (
     if(move.from)assert.equal(canMove(g,move.from,move.to),true);
     else assert.equal(move.to.kind,'stock');
   }
+});
+
+test('Klondike: touching an exposed higher card moves its entire alternating face-up run', () => {
+  const g = newGame();
+  const placed = [12,24,36,22,38]; // K♠ Q♥ J♣ 10♥ and K♣
+  g.tableau = Array.from({length:7},()=>[]);
+  g.tableau[0] = [12,24,36,22].map(id=>({id,up:true}));
+  g.tableau[1] = [{id:38,up:true}];
+  g.stock = Array.from({length:52},(_,i)=>i).filter(id=>!placed.includes(id));
+  g.waste = [];
+  assert.equal(validGame(g),true);
+  const picked={kind:'tableau',column:0,index:1};
+  const target={kind:'tableau',column:1};
+  assert.deepEqual(selectionCards(g,picked),[24,36,22]);
+  assert.equal(canMove(g,picked,target),true);
+  assert.equal(moveCards(g,picked,target),true);
+  assert.deepEqual(g.tableau[1].map(card=>card.id),[38,24,36,22]);
+  assert.deepEqual(g.tableau[0].map(card=>card.id),[12]);
+  assert.equal(validGame(g),true);
+});
+test('Klondike: face-down cards can never be directly selected or moved', () => {
+  const g=newGame();
+  const column=g.tableau.findIndex(p=>p.length>1);
+  const picked={kind:'tableau',column,index:0};
+  assert.equal(g.tableau[column][0].up,false);
+  assert.deepEqual(selectionCards(g,picked),[]);
+  assert.equal(canMove(g,picked,{kind:'tableau',column:0}),false);
 });
