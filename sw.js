@@ -1,5 +1,5 @@
 // One offline service worker for the complete Mini Games PWA.
-const CACHE = 'mini-games-v2';
+const CACHE = 'mini-games-v3';
 const PRECACHE = [
   './', './index.html', './app.js', './styles.css', './manifest.webmanifest',
   './icons/icon.svg', './icons/blocks.svg', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png',
