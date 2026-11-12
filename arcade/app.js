@@ -1,5 +1,5 @@
 import {parseFen,PIECES,legalMoves,applyMove,inCheck,status as chessStatus,chooseAiMove,gridIndexToBoardIndex} from './chess.js';
-import {mountPinball} from './pinball.js?v=8';
+import {mountPinball} from './pinball.js?v=9';
 
 'use strict';
 const $=id=>document.getElementById(id);
