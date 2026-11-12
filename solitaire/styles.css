@@ -31,5 +31,27 @@ footer{margin-top:auto;text-align:center;color:#7daa9a;font-size:9px;letter-spac
    Presentation clones follow the touch; only engine.js decides legal drops. */
 .card.run-selected{outline:2px solid #f7de86;outline-offset:-1px;box-shadow:0 0 10px #ffe19b7a}
 .card.motion-clone{position:fixed!important;touch-action:none;pointer-events:none!important;z-index:2000;will-change:transform;box-shadow:0 10px 25px #001c18bb,0 0 8px #a9fce677}
-.tableau-col:has(.card.selected){border-color:#72eeca66}
+/* Highlight selected card(s), never the whole tableau column. */
 @media(prefers-reduced-motion:reduce){.card.motion-clone{transition:none;animation:none}}
+
+/* Responsive Solitaire. Keep readable cards and allow tall runs to grow vertically. */
+.table{min-height:clamp(260px,calc(100dvh - 235px),660px);overflow:visible}
+.tableau{min-height:min(28dvh,240px)}
+.tableau-col{min-height:var(--card-h);border-color:transparent}
+.card{max-width:100%}
+@media(max-height:700px){
+ .shell{gap:8px;padding-top:8px;padding-bottom:8px}
+ .metrics>div{min-height:45px;padding:5px 2px}
+ .metrics strong{font-size:15px}
+ .separator{margin:12px 2px 8px}
+ .table{min-height:clamp(235px,calc(100dvh - 223px),490px);padding-bottom:10px}
+ .tableau{min-height:clamp(100px,25dvh,165px)}
+ .controls button{min-height:44px}
+ .instructions{padding:8px 10px;font-size:10px}
+}
+@media(max-width:360px){
+ .shell{padding-left:8px;padding-right:8px}
+ .controls{gap:4px}
+ .controls button{font-size:16px}
+ .controls button span{font-size:8px}
+}
